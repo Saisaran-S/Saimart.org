@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Saimart - My Orders</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f5f5f5;
+        }
+
+        .navbar {
+            background: #131921;
+            color: white;
+            padding: 16px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 40px auto;
+        }
+
+        .order {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 15px;
+        }
+
+        .status {
+            color: green;
+            font-weight: bold;
+        }
+
+        .item {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .total {
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .empty {
+            background: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .shop-button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 20px;
+            background: #ff9900;
+            color: black;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <strong>Saimart</strong>
+
+        <div>
+            <a href="/products">Products</a>
+            <a href="/cart">Cart</a>
+            <a href="/orders">My Orders</a>
+            <a href="/login">Logout</a>
+        </div>
+
+    </nav>
+
+
+    <div class="container">
+
+        <h1>📦 My Orders</h1>
+
+        <div id="ordersContainer"></div>
+
+    </div>
+
+
+    <script>
+
+        const ordersContainer =
+            document.getElementById("ordersContainer");
+
+
+        const order =
+            JSON.parse(localStorage.getItem("saimartOrder"));
+
+
+        if (!order) {
+
+            ordersContainer.innerHTML = `
+
+                <div class="empty">
+
+                    <h2>No orders yet</h2>
+
+                    <p>
+                        You haven't placed any orders yet.
+                    </p>
+
+                    <a
+                        href="/products"
+                        class="shop-button">
+
+                        Start Shopping
+
+                    </a>
+
+                </div>
+
+            `;
+
+        } else {
+
+            let itemsHTML = "";
+
+
+            order.items.forEach(item => {
+
+                const itemTotal =
+                    item.price * item.quantity;
+
+
+                itemsHTML += `
+
+                    <div class="item">
+
+                        <strong>
+                            ${item.name}
+                        </strong>
+
+                        <p>
+                            Quantity:
+                            ${item.quantity}
+                        </p>
+
+                        <p>
+                            Price:
+                            ₹${itemTotal}
+                        </p>
+
+                    </div>
+
+                `;
+
+            });
+
+
+            ordersContainer.innerHTML = `
+
+                <div class="order">
+
+                    <div class="order-header">
+
+                        <div>
+
+                            <strong>
+                                Order #1001
+                            </strong>
+
+                            <p>
+                                ${order.orderDate}
+                            </p>
+
+                        </div>
+
+
+                        <div class="status">
+
+                            Order Placed
+
+                        </div>
+
+                    </div>
+
+
+                    <h3>
+                        Delivery Details
+                    </h3>
+
+                    <p>
+                        <strong>
+                            ${order.fullName}
+                        </strong>
+                    </p>
+
+                    <p>
+                        ${order.address},
+                        ${order.city} -
+                        ${order.pincode}
+                    </p>
+
+                    <p>
+                        Payment:
+                        ${order.paymentMethod}
+                    </p>
+
+
+                    <h3>
+                        Items
+                    </h3>
+
+                    ${itemsHTML}
+
+
+                    <div class="total">
+
+                        Total:
+                        ₹${order.total}
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,412 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Saimart - Checkout</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f5f5f5;
+        }
+
+        .navbar {
+            background: #131921;
+            color: white;
+            padding: 16px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 40px auto;
+        }
+
+        .checkout-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            margin-top: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .order-summary {
+            background: #f8f8f8;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 25px;
+        }
+
+        .total {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .place-order {
+            margin-top: 25px;
+            background: #ff9900;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .place-order:hover {
+            background: #e68a00;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <strong>Saimart</strong>
+
+        <div>
+            <a href="/products">Products</a>
+            <a href="/cart">Cart</a>
+            <a href="/login">Logout</a>
+        </div>
+
+    </nav>
+
+
+    <div class="container">
+
+        <div class="checkout-box">
+
+            <h1>🛍️ Checkout</h1>
+
+
+            <form id="checkoutForm">
+
+                <h2>Delivery Information</h2>
+
+
+                <div class="form-group">
+
+                    <label>Full Name</label>
+
+                    <input
+                        type="text"
+                        id="fullName"
+                        placeholder="Enter your full name"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Phone Number</label>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        placeholder="Enter your phone number"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Address</label>
+
+                    <textarea
+                        id="address"
+                        placeholder="Enter your full address"
+                        required></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>City</label>
+
+                    <input
+                        type="text"
+                        id="city"
+                        placeholder="Enter your city"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Pincode</label>
+
+                    <input
+                        type="text"
+                        id="pincode"
+                        placeholder="Enter pincode"
+                        required>
+
+                </div>
+
+
+                <h2>Payment Method</h2>
+
+
+                <div class="form-group">
+
+                    <select id="paymentMethod">
+
+                        <option value="COD">
+                            Cash on Delivery
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="order-summary">
+
+                    <h2>Order Summary</h2>
+
+                    <div id="items"></div>
+
+                    <div class="total" id="total">
+                        Total: ₹0
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="place-order">
+
+                    Place Order
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        let cart =
+            JSON.parse(localStorage.getItem("saimartCart")) || [];
+
+
+        function loadOrderSummary() {
+
+            const items =
+                document.getElementById("items");
+
+            const totalElement =
+                document.getElementById("total");
+
+
+            if (cart.length === 0) {
+
+                items.innerHTML =
+                    "<p>Your cart is empty.</p>";
+
+                totalElement.innerHTML =
+                    "Total: ₹0";
+
+                return;
+
+            }
+
+
+            let total = 0;
+
+            let html = "";
+
+
+            cart.forEach(item => {
+
+                const itemTotal =
+                    item.price * item.quantity;
+
+                total += itemTotal;
+
+
+                html += `
+                    <p>
+                        ${item.name}
+                        × ${item.quantity}
+                        — ₹${itemTotal}
+                    </p>
+                `;
+
+            });
+
+
+            items.innerHTML = html;
+
+            totalElement.innerHTML =
+                "Total: ₹" + total;
+
+        }
+
+
+        
+document
+    .getElementById("checkoutForm")
+    .addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        if (cart.length === 0) {
+
+            alert("Your cart is empty!");
+            return;
+
+        }
+
+        const order = {
+
+            fullName:
+                document.getElementById("fullName").value,
+
+            phone:
+                document.getElementById("phone").value,
+
+            address:
+                document.getElementById("address").value,
+
+            city:
+                document.getElementById("city").value,
+
+            pincode:
+                document.getElementById("pincode").value,
+
+            paymentMethod:
+                document.getElementById("paymentMethod").value,
+
+            total:
+                cart.reduce(
+                    (sum, item) =>
+                        sum + item.price * item.quantity,
+                    0
+                ),
+
+            orderDate:
+                new Date().toLocaleString()
+        };
+
+
+        try {
+
+            const response = await fetch("/api/orders", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(order)
+
+            });
+
+
+            if (!response.ok) {
+
+                throw new Error("Order could not be saved");
+
+            }
+
+
+            const savedOrder = await response.json();
+
+
+           localStorage.setItem(
+    "saimartLastOrderId",
+    savedOrder.id
+);
+
+            localStorage.removeItem("saimartCart");
+
+
+            window.location.href =
+                "/order-success";
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Something went wrong while placing the order."
+            );
+
+        }
+
+    });
+
+
+
+
+        loadOrderSummary();
+
+    </script>
+
+</body>
+
+</html>
+```

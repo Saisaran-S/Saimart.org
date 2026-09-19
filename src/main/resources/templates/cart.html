@@ -1,0 +1,294 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Saimart - Cart</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f5f5f5;
+        }
+
+        .navbar {
+            background: #131921;
+            color: white;
+            padding: 16px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 40px auto;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+        }
+
+        .cart-item {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .cart-item img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+        }
+
+        .details {
+            flex: 1;
+        }
+
+        .price {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .quantity {
+            margin-top: 10px;
+        }
+
+        .quantity button {
+            padding: 5px 12px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .remove {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .summary {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: right;
+        }
+
+        .total {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .checkout {
+            background: #ff9900;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .empty {
+            background: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <strong>Saimart</strong>
+
+        <div>
+            <a href="/products">Products</a>
+            <a href="/cart">Cart</a>
+            <a href="/login">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <h1>🛒 Your Cart</h1>
+
+        <div id="cartContainer"></div>
+
+    </div>
+
+    <script>
+
+        let cart = JSON.parse(localStorage.getItem("saimartCart")) || [];
+
+        function displayCart() {
+
+            const container =
+                document.getElementById("cartContainer");
+
+            if (cart.length === 0) {
+
+                container.innerHTML = `
+                    <div class="empty">
+                        <h2>Your cart is empty</h2>
+                        <p>Add some products to your cart.</p>
+
+                        <br>
+
+                        <a href="/products">
+                            Continue Shopping
+                        </a>
+                    </div>
+                `;
+
+                return;
+            }
+
+            let total = 0;
+
+            let html = "";
+
+            cart.forEach((item, index) => {
+
+                const itemTotal =
+                    item.price * item.quantity;
+
+                total += itemTotal;
+
+                html += `
+                    <div class="cart-item">
+
+                        <img src="${item.imageUrl}"
+                             alt="${item.name}">
+
+                        <div class="details">
+
+                            <h2>${item.name}</h2>
+
+                            <p>${item.description}</p>
+
+                            <div class="price">
+                                ₹${item.price}
+                            </div>
+
+                            <div class="quantity">
+
+                                Quantity:
+
+                                <button onclick="decreaseQuantity(${index})">
+                                    -
+                                </button>
+
+                                ${item.quantity}
+
+                                <button onclick="increaseQuantity(${index})">
+                                    +
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <button class="remove"
+                                onclick="removeItem(${index})">
+                            Remove
+                        </button>
+
+                    </div>
+                `;
+            });
+
+            html += `
+                <div class="summary">
+
+                    <div class="total">
+                        Total: ₹${total}
+                    </div>
+
+                    <button class="checkout"
+                            onclick="checkout()">
+                        Proceed to Checkout
+                    </button>
+
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+
+        function increaseQuantity(index) {
+
+            cart[index].quantity++;
+
+            saveCart();
+        }
+
+
+        function decreaseQuantity(index) {
+
+            if (cart[index].quantity > 1) {
+
+                cart[index].quantity--;
+
+            }
+
+            saveCart();
+        }
+
+
+        function removeItem(index) {
+
+            cart.splice(index, 1);
+
+            saveCart();
+        }
+
+
+        function saveCart() {
+
+            localStorage.setItem(
+                "saimartCart",
+                JSON.stringify(cart)
+            );
+
+            displayCart();
+        }
+
+
+        function checkout() {
+    window.location.href = "/checkout";
+}
+
+
+        displayCart();
+
+    </script>
+
+</body>
+
+</html>
+```

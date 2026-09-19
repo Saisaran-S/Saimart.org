@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Success - Saimart</title>
+</head>
+<body>
+
+
+<h2>Saimart</h2>
+
+<nav>
+    <a href="/products">Products</a> |
+    <a href="/cart">Cart</a> |
+    <a href="/orders">My Orders</a> |
+    <a href="/login">Logout</a>
+</nav>
+
+<hr>
+
+<h1>✅ Order Placed Successfully!</h1>
+
+<p>Thank you for shopping with Saimart.</p>
+
+<h2>Order Details</h2>
+
+<div id="orderDetails">
+    Loading...
+</div>
+
+<br>
+
+<a href="/products"><b>Continue Shopping</b></a> |
+<a href="/orders"><b>My Orders</b></a>
+
+<script>
+    const orderId = localStorage.getItem("saimartLastOrderId");
+
+    if (!orderId) {
+        document.getElementById("orderDetails").innerHTML =
+            "<p>Order information not found.</p>";
+    } else {
+
+        fetch("/api/orders/" + orderId)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Order not found");
+                }
+                return response.json();
+            })
+            .then(order => {
+
+                document.getElementById("orderDetails").innerHTML = `
+                    <p><b>Order ID:</b> #${order.id}</p>
+                    <p><b>Name:</b> ${order.fullName}</p>
+                    <p><b>Phone:</b> ${order.phone}</p>
+                    <p><b>Address:</b> ${order.address}</p>
+                    <p><b>City:</b> ${order.city}</p>
+                    <p><b>Pincode:</b> ${order.pincode}</p>
+                    <p><b>Payment:</b> ${order.paymentMethod}</p>
+                    <p><b>Total:</b> ₹${order.total}</p>
+                    <p><b>Order Date:</b> ${order.orderDate}</p>
+                `;
+            })
+            .catch(error => {
+                console.error(error);
+
+                document.getElementById("orderDetails").innerHTML =
+                    "<p>Unable to load order details.</p>";
+            });
+    }
+</script>
+
+
+</body>
+</html>
