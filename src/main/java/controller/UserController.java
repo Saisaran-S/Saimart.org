@@ -22,19 +22,23 @@ public class UserController {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             return "Email already registered";
         }
+       if (user.getRole() == null ||
+        (!user.getRole().equals("BUYER") &&
+         !user.getRole().equals("SELLER"))) {
 
+    user.setRole("BUYER");
+}
         userRepository.save(user);
 
         return "Account created successfully";
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
+public User login(@RequestBody User user) {
 
-        return userRepository.findByEmail(user.getEmail())
-                .filter(existingUser ->
-                        existingUser.getPassword().equals(user.getPassword()))
-                .map(existingUser -> "Login successful")
-                .orElse("Invalid email or password");
-    }
+    return userRepository.findByEmail(user.getEmail())
+            .filter(existingUser ->
+                    existingUser.getPassword().equals(user.getPassword()))
+            .orElse(null);
+}
 }

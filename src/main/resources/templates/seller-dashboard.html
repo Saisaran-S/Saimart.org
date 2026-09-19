@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Seller Dashboard - Saimart</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f5f5f5;
+        }
+
+        header {
+            background: #222;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .seller-name {
+            font-size: 15px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .welcome {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            margin-top: 0;
+        }
+
+        .card p {
+            color: #666;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #ff9900;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #e68a00;
+        }
+
+        .logout {
+            background: #dc3545;
+            color: white;
+        }
+
+        @media (max-width: 700px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">Saimart Seller</div>
+
+    <div>
+        <span class="seller-name" id="sellerName"></span>
+        <button class="logout" onclick="logout()">Logout</button>
+    </div>
+
+</header>
+
+<div class="container">
+
+    <h1>Seller Dashboard</h1>
+
+    <div class="welcome">
+        Manage your products and orders from here.
+    </div>
+
+    <div class="dashboard-grid">
+
+        <div class="card">
+            <h3>📦 My Products</h3>
+            <p>View and manage your products.</p>
+            <button>View Products</button>
+        </div>
+
+        <div class="card">
+            <h3>➕ Add Product</h3>
+            <p>Add a new product to Saimart.</p>
+            <button onclick="window.location.href='/add-product'">
+                Add Product
+            </button>
+        </div>
+
+        <div class="card">
+            <h3>🛒 Orders</h3>
+            <p>View orders placed by customers.</p>
+            <button>View Orders</button>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const user = JSON.parse(localStorage.getItem("saimartUser"));
+
+if (!user || user.role !== "SELLER") {
+
+    window.location.href = "/login";
+
+} else {
+
+    document.getElementById("sellerName").innerText =
+        "Welcome, " + user.name;
+
+}
+
+function logout() {
+
+    localStorage.removeItem("saimartUser");
+
+    window.location.href = "/login";
+
+}
+
+</script>
+
+</body>
+</html>

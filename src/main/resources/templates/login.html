@@ -15,28 +15,21 @@
         body {
             margin: 0;
             background: #f5f5f5;
-            min-height: 100vh;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
-        .login-container {
+        .login-box {
             width: 400px;
             background: white;
-            padding: 35px;
+            padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
         }
 
-        .logo {
-            text-align: center;
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        h2 {
+        h1 {
             text-align: center;
             margin-bottom: 25px;
         }
@@ -44,7 +37,7 @@
         label {
             display: block;
             margin-top: 15px;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
             font-weight: bold;
         }
 
@@ -58,11 +51,11 @@
 
         button {
             width: 100%;
-            margin-top: 25px;
-            padding: 13px;
-            background: #ff9900;
+            padding: 12px;
+            margin-top: 20px;
             border: none;
             border-radius: 5px;
+            background: #ff9900;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
@@ -72,60 +65,47 @@
             background: #e68a00;
         }
 
-        .register {
+        #message {
+            text-align: center;
+            margin-top: 15px;
+            color: red;
+        }
+
+        .signup-link {
             text-align: center;
             margin-top: 20px;
         }
 
-        .register a {
+        .signup-link a {
+            color: #007bff;
             text-decoration: none;
-        }
-
-        #message {
-            text-align: center;
-            margin-top: 15px;
-            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
 
-<div class="login-container">
+<div class="login-box">
 
-    <div class="logo">Saimart</div>
-
-    <h2>Sign In</h2>
+    <h1>Saimart Login</h1>
 
     <form id="loginForm">
 
         <label>Email</label>
-        <input
-            type="email"
-            id="email"
-            placeholder="Enter your email"
-            required
-        >
+        <input type="email" id="email" required>
 
         <label>Password</label>
-        <input
-            type="password"
-            id="password"
-            placeholder="Enter your password"
-            required
-        >
+        <input type="password" id="password" required>
 
-        <button type="submit">
-            Sign In
-        </button>
+        <button type="submit">Login</button>
 
     </form>
 
     <div id="message"></div>
 
-    <div class="register">
+    <div class="signup-link">
         Don't have an account?
-        <a href="#">Create Account</a>
+        <a href="/signup">Create Account</a>
     </div>
 
 </div>
@@ -138,7 +118,6 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
 
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-
     const message = document.getElementById("message");
 
     try {
@@ -157,27 +136,36 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
             })
         });
 
-        const result = await response.text();
-
-        if (result === "Login successful") {
-
-            message.innerText = "Login successful!";
-
-            setTimeout(function() {
-                window.location.href = "/products";
-            }, 500);
-
-        } else {
-
-            message.innerText = result;
-
+        if (!response.ok) {
+            message.innerText = "Login failed. Please try again.";
+            return;
         }
+
+        const result = await response.json();
+
+        if (!result || !result.role) {
+            message.innerText = "Invalid email or password.";
+            return;
+        }
+
+        localStorage.setItem("saimartUser", JSON.stringify(result));
+
+        message.innerText = "Login successful!";
+
+        setTimeout(function() {
+
+            if (result.role === "SELLER") {
+                window.location.href = "/seller-dashboard";
+            } else {
+                window.location.href = "/products";
+            }
+
+        }, 500);
 
     } catch (error) {
 
-        message.innerText = "Server connection failed.";
-
-        console.error(error);
+        console.error("Login error:", error);
+        message.innerText = "Something went wrong. Please try again.";
 
     }
 

@@ -53,4 +53,8 @@ public String orderSuccess() {
 public String orders() {
     return "orders";
 }
+@GetMapping("/seller-dashboard")
+public String sellerDashboard() {
+    return "seller-dashboard";
+}
 }

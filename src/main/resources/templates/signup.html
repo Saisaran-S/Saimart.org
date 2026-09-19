@@ -116,7 +116,13 @@
             placeholder="Enter your email"
             required
         >
+<label>Account Type</label>
 
+<select id="accountType" required
+    style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 15px;">
+    <option value="BUYER">Buyer</option>
+    <option value="SELLER">Seller</option>
+</select>
         <label>Password</label>
 
         <input
@@ -160,6 +166,7 @@ document.getElementById("signupForm").addEventListener("submit", async function(
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
     const confirmPassword = document.getElementById("confirmPassword").value;
+const accountType = document.getElementById("accountType").value; 
 
     const message = document.getElementById("message");
 
@@ -178,11 +185,12 @@ document.getElementById("signupForm").addEventListener("submit", async function(
                 "Content-Type": "application/json"
             },
 
-            body: JSON.stringify({
-                name: name,
-                email: email,
-                password: password
-            })
+           body: JSON.stringify({
+    name: name,
+    email: email,
+    password: password,
+    role: accountType
+})
         });
 
         const result = await response.text();
