@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -86,6 +85,11 @@
             margin-top: 25px;
         }
 
+        .summary-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
         .total {
             font-size: 24px;
             font-weight: bold;
@@ -105,6 +109,13 @@
 
         .place-order:hover {
             background: #e68a00;
+        }
+
+        .back-cart {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #0073bb;
         }
     </style>
 </head>
@@ -222,7 +233,9 @@
 
                     <div id="items"></div>
 
-                    <div class="total" id="total">
+                    <div
+                        class="total"
+                        id="total">
                         Total: ₹0
                     </div>
 
@@ -237,6 +250,15 @@
 
                 </button>
 
+
+                <br>
+
+                <a
+                    href="/cart"
+                    class="back-cart">
+                    ← Back to Cart
+                </a>
+
             </form>
 
         </div>
@@ -246,13 +268,47 @@
 
     <script>
 
-        let cart =
-            JSON.parse(localStorage.getItem("saimartCart")) || [];
+        /*
+         * Get logged-in buyer
+         */
 
+        const user =
+            JSON.parse(
+                localStorage.getItem("saimartUser")
+            );
+
+
+        /*
+         * Get cart
+         */
+
+        let cart =
+            JSON.parse(
+                localStorage.getItem("saimartCart")
+            ) || [];
+
+
+        /*
+         * Make sure user is logged in
+         */
+
+        if (!user) {
+
+            alert("Please login before checkout.");
+
+            window.location.href =
+                "/login";
+
+        }
+
+
+        /*
+         * Display order summary
+         */
 
         function loadOrderSummary() {
 
-            const items =
+            const itemsElement =
                 document.getElementById("items");
 
             const totalElement =
@@ -261,7 +317,7 @@
 
             if (cart.length === 0) {
 
-                items.innerHTML =
+                itemsElement.innerHTML =
                     "<p>Your cart is empty.</p>";
 
                 totalElement.innerHTML =
@@ -286,17 +342,38 @@
 
 
                 html += `
-                    <p>
-                        ${item.name}
-                        × ${item.quantity}
-                        — ₹${itemTotal}
-                    </p>
+
+                    <div class="summary-item">
+
+                        <strong>
+                            ${item.name}
+                        </strong>
+
+                        <br>
+
+                        Quantity:
+                        ${item.quantity}
+
+                        <br>
+
+                        Price:
+                        ₹${item.price}
+
+                        <br>
+
+                        Item Total:
+                        ₹${itemTotal}
+
+                    </div>
+
                 `;
 
             });
 
 
-            items.innerHTML = html;
+            itemsElement.innerHTML =
+                html;
+
 
             totalElement.innerHTML =
                 "Total: ₹" + total;
@@ -304,103 +381,264 @@
         }
 
 
-        
-document
-    .getElementById("checkoutForm")
-    .addEventListener("submit", async function(event) {
+        /*
+         * Place order
+         */
 
-        event.preventDefault();
+        document
+            .getElementById("checkoutForm")
+            .addEventListener(
+                "submit",
+                async function(event) {
 
-        if (cart.length === 0) {
-
-            alert("Your cart is empty!");
-            return;
-
-        }
-
-        const order = {
-
-            fullName:
-                document.getElementById("fullName").value,
-
-            phone:
-                document.getElementById("phone").value,
-
-            address:
-                document.getElementById("address").value,
-
-            city:
-                document.getElementById("city").value,
-
-            pincode:
-                document.getElementById("pincode").value,
-
-            paymentMethod:
-                document.getElementById("paymentMethod").value,
-
-            total:
-                cart.reduce(
-                    (sum, item) =>
-                        sum + item.price * item.quantity,
-                    0
-                ),
-
-            orderDate:
-                new Date().toLocaleString()
-        };
+                    event.preventDefault();
 
 
-        try {
+                    /*
+                     * Check cart
+                     */
 
-            const response = await fetch("/api/orders", {
+                    if (cart.length === 0) {
 
-                method: "POST",
+                        alert(
+                            "Your cart is empty!"
+                        );
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                        return;
 
-                body: JSON.stringify(order)
-
-            });
-
-
-            if (!response.ok) {
-
-                throw new Error("Order could not be saved");
-
-            }
+                    }
 
 
-            const savedOrder = await response.json();
+                    /*
+                     * Check login
+                     */
+
+                    if (!user) {
+
+                        alert(
+                            "Please login before placing an order."
+                        );
+
+                        window.location.href =
+                            "/login";
+
+                        return;
+
+                    }
 
 
-           localStorage.setItem(
-    "saimartLastOrderId",
-    savedOrder.id
-);
+                    /*
+                     * Create order
+                     */
 
-            localStorage.removeItem("saimartCart");
+                    const order = {
 
-
-            window.location.href =
-                "/order-success";
+                        buyerId:
+                            user.id,
 
 
-        } catch (error) {
+                        fullName:
+                            document
+                                .getElementById(
+                                    "fullName"
+                                )
+                                .value,
 
-            console.error(error);
 
-            alert(
-                "Something went wrong while placing the order."
+                        phone:
+                            document
+                                .getElementById(
+                                    "phone"
+                                )
+                                .value,
+
+
+                        address:
+                            document
+                                .getElementById(
+                                    "address"
+                                )
+                                .value,
+
+
+                        city:
+                            document
+                                .getElementById(
+                                    "city"
+                                )
+                                .value,
+
+
+                        pincode:
+                            document
+                                .getElementById(
+                                    "pincode"
+                                )
+                                .value,
+
+
+                        paymentMethod:
+                            document
+                                .getElementById(
+                                    "paymentMethod"
+                                )
+                                .value,
+
+
+                        total:
+                            cart.reduce(
+                                (sum, item) =>
+                                    sum +
+                                    item.price *
+                                    item.quantity,
+                                0
+                            ),
+
+
+                        orderDate:
+                            new Date()
+                                .toLocaleString(),
+
+
+                        /*
+                         * IMPORTANT:
+                         * Send every cart product
+                         * as an OrderItem.
+                         */
+
+                        items:
+                            cart.map(item => ({
+
+                                productId:
+                                    item.id,
+
+                                sellerId:
+                                    item.sellerId,
+
+                                productName:
+                                    item.name,
+
+                                price:
+                                    item.price,
+
+                                quantity:
+                                    item.quantity
+
+                            }))
+
+                    };
+
+
+                    console.log(
+                        "Order being sent:",
+                        order
+                    );
+
+
+                    try {
+
+                        const response =
+                            await fetch(
+                                "/api/orders",
+                                {
+
+                                    method: "POST",
+
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json"
+                                    },
+
+                                    body:
+                                        JSON.stringify(
+                                            order
+                                        )
+
+                                }
+                            );
+
+
+                        if (!response.ok) {
+
+                            throw new Error(
+                                "Order could not be saved"
+                            );
+
+                        }
+
+
+                        /*
+                         * Backend saved order
+                         */
+
+                        const savedOrder =
+                            await response.json();
+
+
+                        /*
+                         * Save last order ID
+                         */
+
+                        localStorage.setItem(
+                            "saimartLastOrderId",
+                            savedOrder.id
+                        );
+
+
+                        /*
+                         * Save order locally
+                         * for order-success page
+                         */
+
+                        localStorage.setItem(
+                            "saimartOrder",
+                            JSON.stringify({
+
+                                ...savedOrder,
+
+                                items: cart
+
+                            })
+                        );
+
+
+                        /*
+                         * Clear cart
+                         */
+
+                        localStorage.removeItem(
+                            "saimartCart"
+                        );
+
+
+                        /*
+                         * Go to success page
+                         */
+
+                        window.location.href =
+                            "/order-success";
+
+
+                    } catch (error) {
+
+                        console.error(
+                            "Order error:",
+                            error
+                        );
+
+                        alert(
+                            "Something went wrong while placing the order."
+                        );
+
+                    }
+
+                }
             );
 
-        }
 
-    });
-
-
-
+        /*
+         * Load summary
+         */
 
         loadOrderSummary();
 
@@ -409,4 +647,3 @@ document
 </body>
 
 </html>
-```

@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Product - Saimart</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f5f7fb;
+            color: #222;
+        }
+
+        .navbar {
+            background: #111827;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .seller-label {
+            margin-left: 12px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            border: none;
+            padding: 9px 15px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 750px;
+            margin: 40px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #111827;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .save-btn,
+        .cancel-btn {
+            flex: 1;
+            padding: 13px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .save-btn {
+            background: #111827;
+            color: white;
+            border: 1px solid #111827;
+        }
+
+        .cancel-btn {
+            background: white;
+            color: #111827;
+            border: 1px solid #111827;
+        }
+
+        .message {
+            display: none;
+            padding: 12px;
+            border-radius: 7px;
+            margin-bottom: 20px;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
+            padding: 30px;
+        }
+
+        footer {
+            text-align: center;
+            color: #777;
+            padding: 30px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 15px 5%;
+            }
+
+            .seller-label {
+                display: none;
+            }
+
+            .container {
+                width: 94%;
+                margin: 25px auto;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div>
+        <span class="logo">SAIMART</span>
+        <span class="seller-label">Seller Dashboard</span>
+    </div>
+
+    <div class="nav-right">
+
+        <span id="sellerName"></span>
+
+        <button
+            class="nav-btn"
+            onclick="goToMarketplace()">
+            🛍️ Marketplace
+        </button>
+
+        <button
+            class="nav-btn"
+            onclick="logout()">
+            Logout
+        </button>
+
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>Edit Product</h1>
+
+        <p class="subtitle">
+            Update your product information, price and stock.
+        </p>
+
+        <div
+            id="message"
+            class="message">
+        </div>
+
+        <div
+            id="loading"
+            class="loading">
+            Loading product...
+        </div>
+
+
+        <form
+            id="editForm"
+            style="display:none;">
+
+            <div class="form-group">
+
+                <label for="name">
+                    Product Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <textarea
+                    id="description"
+                    required>
+                </textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="category">
+                    Category
+                </label>
+
+                <select
+                    id="category"
+                    required>
+
+                    <option value="">
+                        Select category
+                    </option>
+
+                    <option value="Electronics">
+                        Electronics
+                    </option>
+
+                    <option value="Fashion">
+                        Fashion
+                    </option>
+
+                    <option value="Home">
+                        Home
+                    </option>
+
+                    <option value="Gaming">
+                        Gaming
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="price">
+                    Price (₹)
+                </label>
+
+                <input
+                    type="number"
+                    id="price"
+                    min="0"
+                    step="0.01"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="stock">
+                    Stock
+                </label>
+
+                <input
+                    type="number"
+                    id="stock"
+                    min="0"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="imageUrl">
+                    Image URL
+                </label>
+
+                <input
+                    type="url"
+                    id="imageUrl"
+                    placeholder="https://example.com/image.jpg">
+
+            </div>
+
+
+            <div class="buttons">
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="goBack()">
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="save-btn">
+                    Save Changes
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<footer>
+
+    <strong>SAIMART</strong>
+
+    <br><br>
+
+    © 2026 Saimart. All rights reserved.
+
+</footer>
+
+
+<script>
+
+    const user =
+        JSON.parse(
+            localStorage.getItem("saimartUser")
+        );
+
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const productId =
+        params.get("id");
+
+
+    // SELLER LOGIN CHECK
+    if (!user || user.role !== "SELLER") {
+
+        window.location.href = "/login";
+
+    } else {
+
+        document.getElementById(
+            "sellerName"
+        ).innerText =
+            "Welcome, " + user.name;
+
+
+        if (!productId) {
+
+            showMessage(
+                "Product ID is missing.",
+                "error"
+            );
+
+        } else {
+
+            loadProduct();
+
+        }
+
+    }
+
+
+    // LOAD PRODUCT
+    async function loadProduct() {
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/products/" + productId
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Product not found"
+                );
+
+            }
+
+
+            const product =
+                await response.json();
+
+
+            // IMPORTANT:
+            // Make sure the product belongs
+            // to the logged-in seller.
+            if (
+                Number(product.sellerId) !==
+                Number(user.id)
+            ) {
+
+                showMessage(
+                    "You cannot edit another seller's product.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            document.getElementById("name").value =
+                product.name || "";
+
+
+            document.getElementById("description").value =
+                product.description || "";
+
+
+            document.getElementById("category").value =
+                product.category || "";
+
+
+            document.getElementById("price").value =
+                product.price || 0;
+
+
+            document.getElementById("stock").value =
+                product.stock || 0;
+
+
+            document.getElementById("imageUrl").value =
+                product.imageUrl || "";
+
+
+            document.getElementById(
+                "loading"
+            ).style.display = "none";
+
+
+            document.getElementById(
+                "editForm"
+            ).style.display = "block";
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            showMessage(
+                "Unable to load product.",
+                "error"
+            );
+
+        }
+
+    }
+
+
+    // SAVE CHANGES
+    document.getElementById(
+        "editForm"
+    ).addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            const updatedProduct = {
+
+                name:
+                    document.getElementById(
+                        "name"
+                    ).value,
+
+                description:
+                    document.getElementById(
+                        "description"
+                    ).value,
+
+                category:
+                    document.getElementById(
+                        "category"
+                    ).value,
+
+                price:
+                    parseFloat(
+                        document.getElementById(
+                            "price"
+                        ).value
+                    ),
+
+                stock:
+                    parseInt(
+                        document.getElementById(
+                            "stock"
+                        ).value
+                    ),
+
+                imageUrl:
+                    document.getElementById(
+                        "imageUrl"
+                    ).value
+
+            };
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/products/" + productId,
+                        {
+                            method: "PUT",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    updatedProduct
+                                )
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Update failed"
+                    );
+
+                }
+
+
+                showMessage(
+                    "✓ Product updated successfully!",
+                    "success"
+                );
+
+
+                setTimeout(
+                    function() {
+
+                        window.location.href =
+                            "/my-products";
+
+                    },
+                    1000
+                );
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                showMessage(
+                    "Unable to update product.",
+                    "error"
+                );
+
+            }
+
+        }
+    );
+
+
+    function showMessage(
+        text,
+        type
+    ) {
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+        message.innerText =
+            text;
+
+        message.className =
+            "message " + type;
+
+        message.style.display =
+            "block";
+
+    }
+
+
+    function goBack() {
+
+        window.location.href =
+            "/my-products";
+
+    }
+
+
+    function goToMarketplace() {
+
+        window.location.href =
+            "/";
+
+    }
+
+
+    function logout() {
+
+        localStorage.removeItem(
+            "saimartUser"
+        );
+
+        window.location.href =
+            "/login";
+
+    }
+
+</script>
+
+</body>
+</html>

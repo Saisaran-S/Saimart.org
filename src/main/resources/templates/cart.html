@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -89,6 +88,10 @@
             cursor: pointer;
         }
 
+        .remove:hover {
+            background: #c0392b;
+        }
+
         .summary {
             background: white;
             padding: 25px;
@@ -111,6 +114,10 @@
             cursor: pointer;
         }
 
+        .checkout:hover {
+            background: #e68a00;
+        }
+
         .empty {
             background: white;
             padding: 40px;
@@ -123,6 +130,7 @@
 <body>
 
     <nav class="navbar">
+
         <strong>Saimart</strong>
 
         <div>
@@ -130,7 +138,9 @@
             <a href="/cart">Cart</a>
             <a href="/login">Logout</a>
         </div>
+
     </nav>
+
 
     <div class="container">
 
@@ -140,36 +150,76 @@
 
     </div>
 
+
     <script>
 
-        let cart = JSON.parse(localStorage.getItem("saimartCart")) || [];
+        /*
+         * Load cart from browser storage
+         *
+         * Each cart item keeps the complete product object,
+         * including:
+         *
+         * id
+         * sellerId
+         * name
+         * description
+         * category
+         * price
+         * stock
+         * imageUrl
+         * quantity
+         */
+
+        let cart =
+            JSON.parse(
+                localStorage.getItem("saimartCart")
+            ) || [];
+
 
         function displayCart() {
 
             const container =
                 document.getElementById("cartContainer");
 
+
+            /*
+             * Empty cart
+             */
+
             if (cart.length === 0) {
 
                 container.innerHTML = `
+
                     <div class="empty">
+
                         <h2>Your cart is empty</h2>
-                        <p>Add some products to your cart.</p>
+
+                        <p>
+                            Add some products to your cart.
+                        </p>
 
                         <br>
 
                         <a href="/products">
                             Continue Shopping
                         </a>
+
                     </div>
+
                 `;
 
                 return;
             }
 
+
             let total = 0;
 
             let html = "";
+
+
+            /*
+             * Display every cart item
+             */
 
             cart.forEach((item, index) => {
 
@@ -178,33 +228,54 @@
 
                 total += itemTotal;
 
+
                 html += `
+
                     <div class="cart-item">
 
-                        <img src="${item.imageUrl}"
-                             alt="${item.name}">
+                        <img
+                            src="${item.imageUrl || ''}"
+                            alt="${item.name}"
+                        >
+
 
                         <div class="details">
 
-                            <h2>${item.name}</h2>
+                            <h2>
+                                ${item.name}
+                            </h2>
 
-                            <p>${item.description}</p>
+
+                            <p>
+                                ${item.description || ""}
+                            </p>
+
 
                             <div class="price">
+
                                 ₹${item.price}
+
                             </div>
+
 
                             <div class="quantity">
 
                                 Quantity:
 
-                                <button onclick="decreaseQuantity(${index})">
+
+                                <button
+                                    onclick="decreaseQuantity(${index})"
+                                >
                                     -
                                 </button>
 
+
                                 ${item.quantity}
 
-                                <button onclick="increaseQuantity(${index})">
+
+                                <button
+                                    onclick="increaseQuantity(${index})"
+                                >
                                     +
                                 </button>
 
@@ -212,41 +283,69 @@
 
                         </div>
 
-                        <button class="remove"
-                                onclick="removeItem(${index})">
+
+                        <button
+                            class="remove"
+                            onclick="removeItem(${index})"
+                        >
                             Remove
                         </button>
 
                     </div>
+
                 `;
+
             });
 
+
+            /*
+             * Cart summary
+             */
+
             html += `
+
                 <div class="summary">
 
                     <div class="total">
+
                         Total: ₹${total}
+
                     </div>
 
-                    <button class="checkout"
-                            onclick="checkout()">
+
+                    <button
+                        class="checkout"
+                        onclick="checkout()"
+                    >
                         Proceed to Checkout
                     </button>
 
                 </div>
+
             `;
 
+
             container.innerHTML = html;
+
         }
 
+
+        /*
+         * Increase quantity
+         */
 
         function increaseQuantity(index) {
 
             cart[index].quantity++;
 
             saveCart();
+
         }
 
+
+        /*
+         * Decrease quantity
+         */
 
         function decreaseQuantity(index) {
 
@@ -257,16 +356,29 @@
             }
 
             saveCart();
+
         }
 
+
+        /*
+         * Remove product
+         */
 
         function removeItem(index) {
 
             cart.splice(index, 1);
 
             saveCart();
+
         }
 
+
+        /*
+         * Save cart
+         *
+         * sellerId and product id are automatically
+         * preserved because we save the complete item object.
+         */
 
         function saveCart() {
 
@@ -276,13 +388,33 @@
             );
 
             displayCart();
+
         }
 
 
-        function checkout() {
-    window.location.href = "/checkout";
-}
+        /*
+         * Go to checkout
+         */
 
+        function checkout() {
+
+            if (cart.length === 0) {
+
+                alert("Your cart is empty!");
+
+                return;
+
+            }
+
+            window.location.href =
+                "/checkout";
+
+        }
+
+
+        /*
+         * Display cart when page opens
+         */
 
         displayCart();
 
@@ -291,4 +423,3 @@
 </body>
 
 </html>
-```

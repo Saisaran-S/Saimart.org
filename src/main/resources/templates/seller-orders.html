@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Customer Orders - Saimart</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f5f7fb;
+            color: #222;
+        }
+
+        .navbar {
+            background: #111827;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .seller-label {
+            margin-left: 12px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            border: none;
+            padding: 9px 15px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 40px auto;
+        }
+
+        .heading {
+            margin-bottom: 30px;
+        }
+
+        .heading h1 {
+            margin: 0 0 8px;
+            font-size: 32px;
+        }
+
+        .heading p {
+            margin: 0;
+            color: #666;
+        }
+
+        .orders-container {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .order-card {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+        }
+
+        .order-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 18px;
+        }
+
+        .order-id {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .order-date {
+            color: #777;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .status {
+            background: #fff7ed;
+            color: #c2410c;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            height: fit-content;
+        }
+
+        .product-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .product-info {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .customer-box {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 18px;
+        }
+
+        .customer-box strong {
+            display: block;
+            margin-bottom: 7px;
+        }
+
+        .seller-total {
+            margin-top: 18px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        .empty {
+            background: white;
+            padding: 60px 20px;
+            text-align: center;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+        }
+
+        .empty-icon {
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        .empty h2 {
+            margin-bottom: 8px;
+        }
+
+        .empty p {
+            color: #666;
+        }
+
+        .loading {
+            background: white;
+            padding: 50px;
+            text-align: center;
+            border-radius: 14px;
+            color: #666;
+        }
+
+        footer {
+            text-align: center;
+            color: #777;
+            padding: 30px;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 650px) {
+            .navbar {
+                padding: 15px 5%;
+            }
+
+            .seller-label {
+                display: none;
+            }
+
+            .container {
+                width: 94%;
+                margin: 25px auto;
+            }
+
+            .order-top {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div>
+        <span class="logo">SAIMART</span>
+        <span class="seller-label">Seller Dashboard</span>
+    </div>
+
+    <div class="nav-right">
+
+        <span id="sellerName"></span>
+
+        <button
+            class="nav-btn"
+            onclick="goToDashboard()">
+            Dashboard
+        </button>
+
+        <button
+            class="nav-btn"
+            onclick="logout()">
+            Logout
+        </button>
+
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+    <div class="heading">
+
+        <h1>Customer Orders</h1>
+
+        <p>
+            Orders containing products from your store.
+        </p>
+
+    </div>
+
+
+    <div id="ordersContainer">
+
+        <div class="loading">
+            Loading your orders...
+        </div>
+
+    </div>
+
+</div>
+
+
+<footer>
+
+    <strong>SAIMART</strong>
+
+    <br><br>
+
+    © 2026 Saimart. All rights reserved.
+
+</footer>
+
+
+<script>
+
+    const user =
+        JSON.parse(
+            localStorage.getItem("saimartUser")
+        );
+
+
+    if (!user || user.role !== "SELLER") {
+
+        window.location.href = "/login";
+
+    } else {
+
+        document.getElementById(
+            "sellerName"
+        ).innerText =
+            "Welcome, " + user.name;
+
+        loadSellerOrders();
+
+    }
+
+
+    async function loadSellerOrders() {
+
+        const container =
+            document.getElementById(
+                "ordersContainer"
+            );
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/orders/seller/" + user.id
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Unable to load orders"
+                );
+
+            }
+
+
+            const items =
+                await response.json();
+
+
+            if (!items || items.length === 0) {
+
+                container.innerHTML = `
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            🛒
+                        </div>
+
+                        <h2>No Customer Orders Yet</h2>
+
+                        <p>
+                            Orders containing your
+                            products will appear here.
+                        </p>
+
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            container.innerHTML = "";
+
+
+            for (const item of items) {
+
+                const order =
+                    await getOrder(item.orderId);
+
+
+                const card =
+                    document.createElement("div");
+
+                card.className =
+                    "order-card";
+
+
+                const itemTotal =
+                    Number(item.price) *
+                    Number(item.quantity);
+
+
+                card.innerHTML = `
+
+                    <div class="order-top">
+
+                        <div>
+
+                            <div class="order-id">
+                                Order #${item.orderId}
+                            </div>
+
+                            <div class="order-date">
+                                ${escapeHTML(
+                                    order.orderDate || ""
+                                )}
+                            </div>
+
+                        </div>
+
+                        <div class="status">
+                            Order Placed
+                        </div>
+
+                    </div>
+
+
+                    <div class="product-name">
+                        ${escapeHTML(
+                            item.productName
+                        )}
+                    </div>
+
+                    <div class="product-info">
+
+                        Quantity:
+                        <strong>
+                            ${item.quantity}
+                        </strong>
+
+                        <br>
+
+                        Price per item:
+                        <strong>
+                            ₹${Number(
+                                item.price
+                            ).toLocaleString("en-IN")}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="customer-box">
+
+                        <strong>
+                            Customer Details
+                        </strong>
+
+                        ${escapeHTML(
+                            order.fullName || ""
+                        )}
+
+                        <br>
+
+                        📞 ${escapeHTML(
+                            order.phone || ""
+                        )}
+
+                        <br>
+
+                        📍 ${escapeHTML(
+                            order.address || ""
+                        )},
+                        ${escapeHTML(
+                            order.city || ""
+                        )}
+                        -
+                        ${escapeHTML(
+                            order.pincode || ""
+                        )}
+
+                        <br>
+
+                        💳 ${escapeHTML(
+                            order.paymentMethod || ""
+                        )}
+
+                    </div>
+
+
+                    <div class="seller-total">
+
+                        Your Product Total:
+                        ₹${itemTotal.toLocaleString("en-IN")}
+
+                    </div>
+
+                `;
+
+
+                container.appendChild(card);
+
+            }
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            container.innerHTML = `
+                <div class="empty">
+
+                    <div class="empty-icon">
+                        ⚠️
+                    </div>
+
+                    <h2>Unable to Load Orders</h2>
+
+                    <p>
+                        Please check that the
+                        Saimart server is running.
+                    </p>
+
+                </div>
+            `;
+
+        }
+
+    }
+
+
+    async function getOrder(orderId) {
+
+        const response =
+            await fetch(
+                "/api/orders/" + orderId
+            );
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Order not found"
+            );
+
+        }
+
+        return await response.json();
+    }
+
+
+    function escapeHTML(value) {
+
+        const div =
+            document.createElement("div");
+
+        div.textContent =
+            value || "";
+
+        return div.innerHTML;
+    }
+
+
+    function goToDashboard() {
+
+        window.location.href =
+            "/seller-dashboard";
+
+    }
+
+
+    function logout() {
+
+        localStorage.removeItem(
+            "saimartUser"
+        );
+
+        window.location.href =
+            "/login";
+
+    }
+
+</script>
+
+</body>
+</html>

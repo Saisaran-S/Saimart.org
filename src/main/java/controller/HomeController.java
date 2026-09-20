@@ -57,4 +57,16 @@ public String orders() {
 public String sellerDashboard() {
     return "seller-dashboard";
 }
+@GetMapping("/my-products")
+public String myProducts() {
+    return "my-products";
+}
+@GetMapping("/edit-product")
+public String editProduct() {
+    return "edit-product";
+}
+@GetMapping("/seller-orders")
+public String sellerOrders() {
+    return "seller-orders";
+}
 }

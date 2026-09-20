@@ -1,14 +1,15 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Saimart - My Orders</title>
+    <title>My Orders - Saimart</title>
 
     <style>
+
         * {
             box-sizing: border-box;
             font-family: Arial, sans-serif;
@@ -16,8 +17,11 @@
 
         body {
             margin: 0;
-            background: #f5f5f5;
+            background: #f3f4f6;
+            color: #222;
         }
+
+        /* NAVBAR */
 
         .navbar {
             background: #131921;
@@ -28,90 +32,280 @@
             align-items: center;
         }
 
-        .navbar a {
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: #ff9900;
+        }
+
+        .nav-links a {
             color: white;
             text-decoration: none;
             margin-left: 20px;
         }
 
+        .nav-links a:hover {
+            color: #ff9900;
+        }
+
+        /* CONTAINER */
+
         .container {
-            width: 90%;
-            max-width: 900px;
+            width: 92%;
+            max-width: 950px;
             margin: 40px auto;
         }
 
-        .order {
+        h1 {
+            margin-bottom: 25px;
+        }
+
+        /* ORDER CARD */
+
+        .order-card {
             background: white;
             padding: 25px;
             margin-bottom: 20px;
-            border-radius: 10px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.07);
         }
 
-        .order-header {
+        .order-top {
             display: flex;
             justify-content: space-between;
-            flex-wrap: wrap;
+            align-items: center;
             border-bottom: 1px solid #ddd;
             padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .order-id {
+            font-size: 18px;
+            font-weight: bold;
         }
 
         .status {
-            color: green;
+            color: #198754;
             font-weight: bold;
         }
 
-        .item {
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
+        .order-info {
+            color: #555;
+            line-height: 1.7;
         }
 
         .total {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
-            margin-top: 20px;
+            margin-top: 15px;
         }
+
+        /* ITEMS */
+
+        .items-box {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .item {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .item:last-child {
+            border-bottom: none;
+        }
+
+        .item-name {
+            font-weight: bold;
+        }
+
+        .item-details {
+            color: #666;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        /* TRACK BUTTON */
+
+        .track-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 22px;
+            background: #ff9900;
+            color: #111;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            font-size: 15px;
+        }
+
+        .track-button:hover {
+            background: #e68a00;
+        }
+
+        /* TRACKING */
+
+        .tracking-box {
+            display: none;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #ddd;
+        }
+
+        .tracking-title {
+            font-size: 19px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .tracking-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .tracking-steps::before {
+            content: "";
+            position: absolute;
+            top: 18px;
+            left: 10%;
+            right: 10%;
+            height: 4px;
+            background: #ddd;
+            z-index: 0;
+        }
+
+        .step {
+            width: 20%;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .circle {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #ddd;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .step.active .circle {
+            background: #20a05a;
+            color: white;
+        }
+
+        .step.active p {
+            color: #20a05a;
+            font-weight: bold;
+        }
+
+        .step p {
+            font-size: 12px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        /* EMPTY */
 
         .empty {
             background: white;
-            padding: 40px;
+            padding: 50px;
             text-align: center;
-            border-radius: 10px;
+            border-radius: 12px;
         }
 
         .shop-button {
             display: inline-block;
             margin-top: 15px;
-            padding: 12px 20px;
+            padding: 12px 22px;
             background: #ff9900;
-            color: black;
+            color: #111;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 6px;
             font-weight: bold;
         }
+
+        /* MOBILE */
+
+        @media (max-width: 650px) {
+
+            .navbar {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .nav-links a {
+                margin: 0 6px;
+                font-size: 13px;
+            }
+
+            .container {
+                margin-top: 25px;
+            }
+
+            .order-top {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .tracking-steps p {
+                font-size: 9px;
+            }
+
+        }
+
     </style>
+
 </head>
+
 
 <body>
 
+
+    <!-- NAVBAR -->
+
     <nav class="navbar">
 
-        <strong>Saimart</strong>
+        <div class="logo">
+            Saimart
+        </div>
 
-        <div>
+        <div class="nav-links">
+
+            <a href="/">Home</a>
+
             <a href="/products">Products</a>
+
             <a href="/cart">Cart</a>
+
             <a href="/orders">My Orders</a>
-            <a href="/login">Logout</a>
+
         </div>
 
     </nav>
 
 
+    <!-- MAIN -->
+
     <div class="container">
 
         <h1>📦 My Orders</h1>
 
-        <div id="ordersContainer"></div>
+        <div id="ordersContainer">
+
+            Loading orders...
+
+        </div>
 
     </div>
 
@@ -122,27 +316,31 @@
             document.getElementById("ordersContainer");
 
 
-        const order =
-            JSON.parse(localStorage.getItem("saimartOrder"));
+        // Get logged-in user
+
+        const user =
+            JSON.parse(localStorage.getItem("saimartUser"));
 
 
-        if (!order) {
+        // Check login
+
+        if (!user) {
 
             ordersContainer.innerHTML = `
 
                 <div class="empty">
 
-                    <h2>No orders yet</h2>
+                    <h2>Please Login</h2>
 
                     <p>
-                        You haven't placed any orders yet.
+                        Please login to view your orders.
                     </p>
 
                     <a
-                        href="/products"
+                        href="/login"
                         class="shop-button">
 
-                        Start Shopping
+                        🔐 Login
 
                     </a>
 
@@ -152,101 +350,322 @@
 
         } else {
 
-            let itemsHTML = "";
+            loadOrders();
+
+        }
 
 
-            order.items.forEach(item => {
+        // LOAD BUYER ORDERS FROM DATABASE
 
-                const itemTotal =
-                    item.price * item.quantity;
+        async function loadOrders() {
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/orders/buyer/" + user.id
+                    );
 
 
-                itemsHTML += `
+                if (!response.ok) {
 
-                    <div class="item">
+                    throw new Error(
+                        "Failed to load orders"
+                    );
 
-                        <strong>
-                            ${item.name}
-                        </strong>
+                }
+
+
+                const orders =
+                    await response.json();
+
+
+                if (!orders || orders.length === 0) {
+
+                    ordersContainer.innerHTML = `
+
+                        <div class="empty">
+
+                            <h2>No orders yet</h2>
+
+                            <p>
+                                You haven't placed any orders yet.
+                            </p>
+
+                            <a
+                                href="/products"
+                                class="shop-button">
+
+                                🛍️ Start Shopping
+
+                            </a>
+
+                        </div>
+
+                    `;
+
+                    return;
+
+                }
+
+
+                ordersContainer.innerHTML =
+                    orders.map(
+                        (order, index) =>
+                            createOrderCard(
+                                order,
+                                index
+                            )
+                    ).join("");
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error loading orders:",
+                    error
+                );
+
+
+                ordersContainer.innerHTML = `
+
+                    <div class="empty">
+
+                        <h2>Unable to load orders</h2>
 
                         <p>
-                            Quantity:
-                            ${item.quantity}
+                            Please make sure the Saimart server is running.
                         </p>
 
-                        <p>
-                            Price:
-                            ₹${itemTotal}
-                        </p>
+                        <button
+                            class="shop-button"
+                            onclick="loadOrders()">
+
+                            🔄 Try Again
+
+                        </button>
 
                     </div>
 
                 `;
 
-            });
+            }
+
+        }
 
 
-            ordersContainer.innerHTML = `
+        // CREATE ORDER CARD
 
-                <div class="order">
+        function createOrderCard(order, index) {
 
-                    <div class="order-header">
+            const trackingId =
+                "tracking-" + index;
+
+
+            let itemsHtml = "";
+
+
+            if (
+                order.items &&
+                order.items.length > 0
+            ) {
+
+                itemsHtml =
+                    order.items.map(item => `
+
+                        <div class="item">
+
+                            <div class="item-name">
+
+                                ${escapeHtml(
+                                    item.productName
+                                )}
+
+                            </div>
+
+                            <div class="item-details">
+
+                                ₹${item.price}
+                                ×
+                                ${item.quantity}
+
+                            </div>
+
+                        </div>
+
+                    `).join("");
+
+            }
+
+
+            return `
+
+                <div class="order-card">
+
+                    <div class="order-top">
 
                         <div>
 
-                            <strong>
-                                Order #1001
-                            </strong>
+                            <div class="order-id">
 
-                            <p>
-                                ${order.orderDate}
-                            </p>
+                                Order #${order.id}
+
+                            </div>
+
+                            <div class="order-info">
+
+                                ${escapeHtml(
+                                    order.orderDate || ""
+                                )}
+
+                            </div>
 
                         </div>
 
 
                         <div class="status">
 
-                            Order Placed
+                            ✓ Order Placed
 
                         </div>
 
                     </div>
 
 
-                    <h3>
-                        Delivery Details
-                    </h3>
+                    <div class="order-info">
 
-                    <p>
                         <strong>
-                            ${order.fullName}
+
+                            ${escapeHtml(
+                                order.fullName || ""
+                            )}
+
                         </strong>
-                    </p>
 
-                    <p>
-                        ${order.address},
-                        ${order.city} -
-                        ${order.pincode}
-                    </p>
+                        <br>
 
-                    <p>
-                        Payment:
-                        ${order.paymentMethod}
-                    </p>
+                        ${escapeHtml(
+                            order.city || ""
+                        )}
+
+                        -
+
+                        ${escapeHtml(
+                            order.pincode || ""
+                        )}
+
+                    </div>
 
 
-                    <h3>
-                        Items
-                    </h3>
+                    <div class="items-box">
 
-                    ${itemsHTML}
+                        <strong>
+                            Products
+                        </strong>
+
+                        ${itemsHtml}
+
+                    </div>
 
 
                     <div class="total">
 
-                        Total:
-                        ₹${order.total}
+                        Total: ₹${order.total}
+
+                    </div>
+
+
+                    <button
+                        class="track-button"
+                        onclick="toggleTracking('${trackingId}', this)">
+
+                        🚚 Track Order
+
+                    </button>
+
+
+                    <!-- TRACKING -->
+
+                    <div
+                        id="${trackingId}"
+                        class="tracking-box">
+
+                        <div class="tracking-title">
+
+                            🚚 Track Order #${order.id}
+
+                        </div>
+
+
+                        <div class="tracking-steps">
+
+
+                            <div class="step active">
+
+                                <div class="circle">
+                                    ✓
+                                </div>
+
+                                <p>
+                                    Order Placed
+                                </p>
+
+                            </div>
+
+
+                            <div class="step">
+
+                                <div class="circle">
+                                    2
+                                </div>
+
+                                <p>
+                                    Confirmed
+                                </p>
+
+                            </div>
+
+
+                            <div class="step">
+
+                                <div class="circle">
+                                    3
+                                </div>
+
+                                <p>
+                                    Shipped
+                                </p>
+
+                            </div>
+
+
+                            <div class="step">
+
+                                <div class="circle">
+                                    4
+                                </div>
+
+                                <p>
+                                    Out for Delivery
+                                </p>
+
+                            </div>
+
+
+                            <div class="step">
+
+                                <div class="circle">
+                                    5
+                                </div>
+
+                                <p>
+                                    Delivered
+                                </p>
+
+                            </div>
+
+
+                        </div>
 
                     </div>
 
@@ -256,7 +675,59 @@
 
         }
 
+
+        // TRACKING TOGGLE
+
+        function toggleTracking(
+            trackingId,
+            button
+        ) {
+
+            const trackingBox =
+                document.getElementById(
+                    trackingId
+                );
+
+
+            if (
+                trackingBox.style.display ===
+                "block"
+            ) {
+
+                trackingBox.style.display =
+                    "none";
+
+                button.innerHTML =
+                    "🚚 Track Order";
+
+            } else {
+
+                trackingBox.style.display =
+                    "block";
+
+                button.innerHTML =
+                    "▲ Hide Tracking";
+
+            }
+
+        }
+
+
+        // BASIC HTML ESCAPING
+
+        function escapeHtml(value) {
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+        }
+
     </script>
+
 
 </body>
 
