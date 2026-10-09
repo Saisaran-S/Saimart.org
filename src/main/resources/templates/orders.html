@@ -1,734 +1,459 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>My Orders - Saimart</title>
-
+    <title>My Orders — Saimart</title>
+    <link rel="stylesheet" href="/css/saimart.css">
     <style>
-
-        * {
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
+        .orders-wrapper {
+            max-width: 1000px;
+            margin: 40px auto 70px;
+            padding: 0 20px;
         }
 
-        body {
-            margin: 0;
-            background: #f3f4f6;
-            color: #222;
-        }
-
-        /* NAVBAR */
-
-        .navbar {
-            background: #131921;
-            color: white;
-            padding: 16px 6%;
+        .orders-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        .orders-header h1 {
+            font-size: 28px;
+            font-weight: 800;
         }
 
-        .logo {
-            font-size: 25px;
-            font-weight: bold;
-            color: #ff9900;
+        .orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
         }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            margin-left: 20px;
-        }
-
-        .nav-links a:hover {
-            color: #ff9900;
-        }
-
-        /* CONTAINER */
-
-        .container {
-            width: 92%;
-            max-width: 950px;
-            margin: 40px auto;
-        }
-
-        h1 {
-            margin-bottom: 25px;
-        }
-
-        /* ORDER CARD */
 
         .order-card {
             background: white;
-            padding: 25px;
-            margin-bottom: 20px;
-            border-radius: 12px;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.07);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
         }
 
-        .order-top {
+        .order-card-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 15px;
-            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 18px;
         }
 
-        .order-id {
-            font-size: 18px;
-            font-weight: bold;
+        .order-id-title {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+        .order-meta-date {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
         }
 
-        .status {
-            color: #198754;
-            font-weight: bold;
+        .status-pill {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
+        .status-pill.placed { background: #e0f2fe; color: #0369a1; }
+        .status-pill.confirmed { background: #fef3c7; color: #b45309; }
+        .status-pill.shipped { background: #f3e8ff; color: #7e22ce; }
+        .status-pill.out_for_delivery { background: #ffedd5; color: #c2410c; }
+        .status-pill.delivered { background: #dcfce7; color: #15803d; }
+        .status-pill.cancelled { background: #fee2e2; color: #b91c1c; }
 
-        .order-info {
-            color: #555;
-            line-height: 1.7;
+        .items-block {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 18px;
         }
-
-        .total {
-            font-size: 20px;
-            font-weight: bold;
-            margin-top: 15px;
+        .order-item-snippet {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            padding: 8px 0;
+            border-bottom: 1px dashed #f1f5f9;
         }
-
-        /* ITEMS */
-
-        .items-box {
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
-        }
-
-        .item {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .item:last-child {
+        .order-item-snippet:last-child {
             border-bottom: none;
         }
 
-        .item-name {
-            font-weight: bold;
+        .order-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+        .order-total-amount {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--text-main);
         }
 
-        .item-details {
-            color: #666;
-            font-size: 14px;
-            margin-top: 4px;
-        }
-
-        /* TRACK BUTTON */
-
-        .track-button {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 22px;
-            background: #ff9900;
-            color: #111;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            font-size: 15px;
-        }
-
-        .track-button:hover {
-            background: #e68a00;
-        }
-
-        /* TRACKING */
-
-        .tracking-box {
+        /* Tracking Box */
+        .live-tracker-box {
             display: none;
-            margin-top: 25px;
-            padding-top: 25px;
-            border-top: 1px solid #ddd;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 24px;
+            margin-top: 20px;
         }
-
-        .tracking-title {
-            font-size: 19px;
-            font-weight: bold;
-            margin-bottom: 25px;
-        }
-
-        .tracking-steps {
+        .tracker-steps {
             display: flex;
             justify-content: space-between;
             position: relative;
+            margin-top: 16px;
         }
-
-        .tracking-steps::before {
-            content: "";
+        .tracker-steps::before {
+            content: '';
             position: absolute;
             top: 18px;
             left: 10%;
             right: 10%;
-            height: 4px;
-            background: #ddd;
+            height: 3px;
+            background: #cbd5e1;
             z-index: 0;
         }
-
-        .step {
-            width: 20%;
-            text-align: center;
+        .t-step {
             position: relative;
             z-index: 1;
+            text-align: center;
+            width: 18%;
         }
-
-        .circle {
-            width: 38px;
-            height: 38px;
+        .t-circle {
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            background: #ddd;
-            margin: auto;
+            background: #cbd5e1;
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            font-size: 14px;
+            font-weight: 700;
+            margin: 0 auto 6px;
+        }
+        .t-step.active .t-circle, .t-step.completed .t-circle {
+            background: var(--success);
+        }
+        .t-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        .t-step.active .t-label, .t-step.completed .t-label {
+            color: var(--text-main);
+            font-weight: 700;
         }
 
-        .step.active .circle {
-            background: #20a05a;
-            color: white;
-        }
-
-        .step.active p {
-            color: #20a05a;
-            font-weight: bold;
-        }
-
-        .step p {
-            font-size: 12px;
-            color: #666;
-            margin-top: 10px;
-        }
-
-        /* EMPTY */
-
-        .empty {
+        .empty-orders {
             background: white;
-            padding: 50px;
+            border: 1px dashed var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 70px 20px;
             text-align: center;
-            border-radius: 12px;
         }
 
-        .shop-button {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 12px 22px;
-            background: #ff9900;
-            color: #111;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: bold;
-        }
-
-        /* MOBILE */
-
-        @media (max-width: 650px) {
-
-            .navbar {
+        @media (max-width: 600px) {
+            .tracker-steps {
                 flex-direction: column;
                 gap: 12px;
             }
-
-            .nav-links a {
-                margin: 0 6px;
-                font-size: 13px;
+            .tracker-steps::before {
+                display: none;
             }
-
-            .container {
-                margin-top: 25px;
+            .t-step {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                text-align: left;
             }
-
-            .order-top {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
+            .t-circle {
+                margin: 0;
             }
-
-            .tracking-steps p {
-                font-size: 9px;
-            }
-
         }
-
     </style>
-
 </head>
-
-
 <body>
 
+    <!-- UNIVERSAL NAVBAR -->
+    <header class="saimart-nav">
+        <div class="saimart-nav-inner">
+            <a href="/" class="nav-brand">
+                <span class="nav-brand-logo">SAIMART</span>
+                <span class="nav-brand-badge">Marketplace</span>
+            </a>
 
-    <!-- NAVBAR -->
+            <div class="nav-actions" style="margin-left: auto;">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/products" class="nav-link">Products</a>
+                <a href="/orders" class="nav-link active">📦 My Orders</a>
+                <a href="/cart" class="nav-link">🛒 Cart <span class="cart-badge" id="navCartCount">0</span></a>
+                <div id="authLinks" style="display: flex; gap: 8px; align-items: center;">
+                    <a href="/login" class="btn-auth-outline">Login</a>
+                </div>
+            </div>
+        </div>
+    </header>
 
-    <nav class="navbar">
-
-        <div class="logo">
-            Saimart
+    <div class="orders-wrapper">
+        <div class="orders-header">
+            <div>
+                <h1>Order History & Tracking</h1>
+                <p style="color: var(--text-muted); font-size: 14px;">Monitor your shipments and view order receipts</p>
+            </div>
+            <a href="/products" class="btn btn-outline" style="font-size: 13px;">+ Shop More</a>
         </div>
 
-        <div class="nav-links">
-
-            <a href="/">Home</a>
-
-            <a href="/products">Products</a>
-
-            <a href="/cart">Cart</a>
-
-            <a href="/orders">My Orders</a>
-
+        <div id="ordersContainer" class="orders-list">
+            <div style="text-align: center; padding: 50px; color: var(--text-muted);">
+                Loading your orders...
+            </div>
         </div>
-
-    </nav>
-
-
-    <!-- MAIN -->
-
-    <div class="container">
-
-        <h1>📦 My Orders</h1>
-
-        <div id="ordersContainer">
-
-            Loading orders...
-
-        </div>
-
     </div>
 
+    <!-- FOOTER -->
+    <footer class="saimart-footer">
+        <div class="saimart-footer-inner">
+            <div class="footer-col">
+                <h4 style="color: var(--accent);">SAIMART</h4>
+                <p>Track shipments anytime and manage orders seamlessly.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Help</h4>
+                <p>Have questions regarding your order? Click SaiBot in the lower corner!</p>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2026 Saimart. Built with Spring Boot & MySQL.</div>
+    </footer>
+
+    <!-- SHARED JS CLIENT -->
+    <script src="/js/saimart.js"></script>
 
     <script>
-
-        const ordersContainer =
-            document.getElementById("ordersContainer");
-
-
-        // Get logged-in user
-
-        const user =
-            JSON.parse(localStorage.getItem("saimartUser"));
-
-
-        // Check login
-
-        if (!user) {
-
-            ordersContainer.innerHTML = `
-
-                <div class="empty">
-
-                    <h2>Please Login</h2>
-
-                    <p>
-                        Please login to view your orders.
-                    </p>
-
-                    <a
-                        href="/login"
-                        class="shop-button">
-
-                        🔐 Login
-
-                    </a>
-
-                </div>
-
-            `;
-
-        } else {
-
-            loadOrders();
-
+        function initNavUser() {
+            const user = getUser();
+            const authDiv = document.getElementById("authLinks");
+            if (user) {
+                authDiv.innerHTML = `
+                    <div class="nav-user-pill">
+                        <div class="nav-user-avatar">${(user.name || "U")[0].toUpperCase()}</div>
+                        <span>${escapeHTML(user.name || user.email)}</span>
+                    </div>
+                    <button onclick="logout()" class="btn-auth-outline" style="font-size:12px;">Logout</button>
+                `;
+            }
         }
 
+        async function loadBuyerOrders() {
+            const user = getUser();
+            const container = document.getElementById("ordersContainer");
 
-        // LOAD BUYER ORDERS FROM DATABASE
-
-        async function loadOrders() {
+            if (!user) {
+                container.innerHTML = `
+                    <div class="empty-orders">
+                        <div style="font-size: 54px; margin-bottom: 14px;">🔐</div>
+                        <h2>Please Login to View Your Orders</h2>
+                        <p style="color: var(--text-muted); margin-bottom: 20px;">Access your order history, live tracking, and receipts.</p>
+                        <a href="/login?redirect=/orders" class="btn btn-primary" style="padding: 12px 28px;">Sign In to Saimart</a>
+                    </div>
+                `;
+                return;
+            }
 
             try {
+                const res = await fetch("/api/orders/buyer/" + user.id);
+                if (!res.ok) throw new Error("Failed to load orders");
 
-                const response =
-                    await fetch(
-                        "/api/orders/buyer/" + user.id
-                    );
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        "Failed to load orders"
-                    );
-
-                }
-
-
-                const orders =
-                    await response.json();
-
+                const orders = await res.json();
 
                 if (!orders || orders.length === 0) {
-
-                    ordersContainer.innerHTML = `
-
-                        <div class="empty">
-
-                            <h2>No orders yet</h2>
-
-                            <p>
-                                You haven't placed any orders yet.
-                            </p>
-
-                            <a
-                                href="/products"
-                                class="shop-button">
-
-                                🛍️ Start Shopping
-
-                            </a>
-
+                    container.innerHTML = `
+                        <div class="empty-orders">
+                            <div style="font-size: 54px; margin-bottom: 14px;">📦</div>
+                            <h2>No Orders Yet</h2>
+                            <p style="color: var(--text-muted); margin-bottom: 20px;">You haven't placed any orders yet. Find what you love today!</p>
+                            <a href="/products" class="btn btn-primary" style="padding: 12px 28px;">Start Shopping</a>
                         </div>
-
                     `;
-
                     return;
-
                 }
 
+                container.innerHTML = "";
+                orders.forEach(order => {
+                    const card = createOrderCardElement(order);
+                    container.appendChild(card);
+                });
 
-                ordersContainer.innerHTML =
-                    orders.map(
-                        (order, index) =>
-                            createOrderCard(
-                                order,
-                                index
-                            )
-                    ).join("");
-
-
-            } catch (error) {
-
-                console.error(
-                    "Error loading orders:",
-                    error
-                );
-
-
-                ordersContainer.innerHTML = `
-
-                    <div class="empty">
-
-                        <h2>Unable to load orders</h2>
-
-                        <p>
-                            Please make sure the Saimart server is running.
-                        </p>
-
-                        <button
-                            class="shop-button"
-                            onclick="loadOrders()">
-
-                            🔄 Try Again
-
-                        </button>
-
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = `
+                    <div class="empty-orders">
+                        <div style="font-size: 50px; color: var(--danger); margin-bottom: 10px;">⚠️</div>
+                        <h3>Unable to load your orders</h3>
+                        <p>Please check your server connection.</p>
                     </div>
-
                 `;
-
             }
-
         }
 
+        function createOrderCardElement(order) {
+            const div = document.createElement("div");
+            div.className = "order-card";
 
-        // CREATE ORDER CARD
-
-        function createOrderCard(order, index) {
-
-            const trackingId =
-                "tracking-" + index;
-
+            const status = (order.status || "PLACED").toUpperCase();
+            const statusClass = status.toLowerCase();
 
             let itemsHtml = "";
-
-
-            if (
-                order.items &&
-                order.items.length > 0
-            ) {
-
-                itemsHtml =
-                    order.items.map(item => `
-
-                        <div class="item">
-
-                            <div class="item-name">
-
-                                ${escapeHtml(
-                                    item.productName
-                                )}
-
+            if (order.items && order.items.length > 0) {
+                order.items.forEach(i => {
+                    itemsHtml += `
+                        <div class="order-item-snippet">
+                            <div>
+                                <strong>${escapeHTML(i.productName)}</strong>
+                                <span style="font-size: 12px; color: var(--text-muted); margin-left: 8px;">Qty: ${i.quantity}</span>
                             </div>
-
-                            <div class="item-details">
-
-                                ₹${item.price}
-                                ×
-                                ${item.quantity}
-
-                            </div>
-
+                            <div>₹${(Number(i.price) * Number(i.quantity)).toLocaleString("en-IN")}</div>
                         </div>
-
-                    `).join("");
-
+                    `;
+                });
             }
 
+            const canCancel = (status === "PLACED" || status === "CONFIRMED");
 
-            return `
-
-                <div class="order-card">
-
-                    <div class="order-top">
-
-                        <div>
-
-                            <div class="order-id">
-
-                                Order #${order.id}
-
-                            </div>
-
-                            <div class="order-info">
-
-                                ${escapeHtml(
-                                    order.orderDate || ""
-                                )}
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="status">
-
-                            ✓ Order Placed
-
-                        </div>
-
+            div.innerHTML = `
+                <div class="order-card-top">
+                    <div>
+                        <div class="order-id-title">Order #${order.id}</div>
+                        <div class="order-meta-date">Placed on ${escapeHTML(order.orderDate || "Recent")} • ${escapeHTML(order.paymentMethod || "COD")}</div>
                     </div>
-
-
-                    <div class="order-info">
-
-                        <strong>
-
-                            ${escapeHtml(
-                                order.fullName || ""
-                            )}
-
-                        </strong>
-
-                        <br>
-
-                        ${escapeHtml(
-                            order.city || ""
-                        )}
-
-                        -
-
-                        ${escapeHtml(
-                            order.pincode || ""
-                        )}
-
-                    </div>
-
-
-                    <div class="items-box">
-
-                        <strong>
-                            Products
-                        </strong>
-
-                        ${itemsHtml}
-
-                    </div>
-
-
-                    <div class="total">
-
-                        Total: ₹${order.total}
-
-                    </div>
-
-
-                    <button
-                        class="track-button"
-                        onclick="toggleTracking('${trackingId}', this)">
-
-                        🚚 Track Order
-
-                    </button>
-
-
-                    <!-- TRACKING -->
-
-                    <div
-                        id="${trackingId}"
-                        class="tracking-box">
-
-                        <div class="tracking-title">
-
-                            🚚 Track Order #${order.id}
-
-                        </div>
-
-
-                        <div class="tracking-steps">
-
-
-                            <div class="step active">
-
-                                <div class="circle">
-                                    ✓
-                                </div>
-
-                                <p>
-                                    Order Placed
-                                </p>
-
-                            </div>
-
-
-                            <div class="step">
-
-                                <div class="circle">
-                                    2
-                                </div>
-
-                                <p>
-                                    Confirmed
-                                </p>
-
-                            </div>
-
-
-                            <div class="step">
-
-                                <div class="circle">
-                                    3
-                                </div>
-
-                                <p>
-                                    Shipped
-                                </p>
-
-                            </div>
-
-
-                            <div class="step">
-
-                                <div class="circle">
-                                    4
-                                </div>
-
-                                <p>
-                                    Out for Delivery
-                                </p>
-
-                            </div>
-
-
-                            <div class="step">
-
-                                <div class="circle">
-                                    5
-                                </div>
-
-                                <p>
-                                    Delivered
-                                </p>
-
-                            </div>
-
-
-                        </div>
-
-                    </div>
-
+                    <span class="status-pill ${statusClass}">● ${status.replace(/_/g, ' ')}</span>
                 </div>
 
-            `;
+                <div class="items-block">
+                    ${itemsHtml}
+                </div>
 
+                <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+                    📍 Ship to: <strong>${escapeHTML(order.fullName || "")}</strong>, ${escapeHTML(order.address || "")}, ${escapeHTML(order.city || "")} - ${escapeHTML(order.pincode || "")}
+                </div>
+
+                <div class="order-card-footer">
+                    <div class="order-total-amount">
+                        Total: ₹${Number(order.total).toLocaleString("en-IN")}
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        ${canCancel ? `<button class="btn btn-outline" style="color: var(--danger); border-color: #fca5a5; font-size: 13px; padding: 7px 14px;" onclick="cancelBuyerOrder(${order.id})">Cancel Order</button>` : ''}
+                        <button class="btn btn-dark" style="font-size: 13px; padding: 7px 16px;" onclick="toggleTrackingBox('track-${order.id}', '${status}', this)">
+                            🚚 Track Status
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Expanded Live Tracker -->
+                <div class="live-tracker-box" id="track-${order.id}">
+                    <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 10px;">Shipment Progress (Order #${order.id})</h4>
+                    <div class="tracker-steps" id="steps-${order.id}"></div>
+                </div>
+            `;
+            return div;
         }
 
+        function toggleTrackingBox(boxId, status, btn) {
+            const box = document.getElementById(boxId);
+            if (!box) return;
 
-        // TRACKING TOGGLE
+            const isShown = box.style.display === "block";
+            box.style.display = isShown ? "none" : "block";
+            btn.innerText = isShown ? "🚚 Track Status" : "▲ Hide Tracker";
 
-        function toggleTracking(
-            trackingId,
-            button
-        ) {
+            if (!isShown) {
+                renderStepsForOrder(boxId.replace("track-", "steps-"), status);
+            }
+        }
 
-            const trackingBox =
-                document.getElementById(
-                    trackingId
-                );
+        function renderStepsForOrder(stepsContainerId, status) {
+            const container = document.getElementById(stepsContainerId);
+            if (!container) return;
 
-
-            if (
-                trackingBox.style.display ===
-                "block"
-            ) {
-
-                trackingBox.style.display =
-                    "none";
-
-                button.innerHTML =
-                    "🚚 Track Order";
-
-            } else {
-
-                trackingBox.style.display =
-                    "block";
-
-                button.innerHTML =
-                    "▲ Hide Tracking";
-
+            if (status === "CANCELLED") {
+                container.innerHTML = `
+                    <div style="text-align: center; color: var(--danger); font-weight: 700; padding: 10px;">
+                        ✕ This order has been cancelled. Inventory has been restored.
+                    </div>
+                `;
+                return;
             }
 
+            const stepNames = [
+                { id: "PLACED", label: "Placed" },
+                { id: "CONFIRMED", label: "Confirmed" },
+                { id: "SHIPPED", label: "Shipped" },
+                { id: "OUT_FOR_DELIVERY", label: "Out for Delivery" },
+                { id: "DELIVERED", label: "Delivered" }
+            ];
+
+            const activeIdx = stepNames.findIndex(s => s.id === status);
+            const currentIdx = activeIdx >= 0 ? activeIdx : 0;
+
+            let html = "";
+            stepNames.forEach((s, i) => {
+                const isCompleted = i < currentIdx;
+                const isActive = i === currentIdx;
+                const cls = isCompleted ? "t-step completed" : (isActive ? "t-step active" : "t-step");
+                const icon = isCompleted ? "✓" : (i + 1);
+
+                html += `
+                    <div class="${cls}">
+                        <div class="t-circle">${icon}</div>
+                        <div class="t-label">${s.label}</div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
         }
 
+        async function cancelBuyerOrder(orderId) {
+            if (!confirm(`Are you sure you want to cancel Order #${orderId}?`)) return;
 
-        // BASIC HTML ESCAPING
+            try {
+                const res = await fetch(`/api/orders/${orderId}/cancel`, { method: "PUT" });
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err.error || "Failed to cancel order");
+                }
 
-        function escapeHtml(value) {
+                showToast(`Order #${orderId} was cancelled successfully.`, "info");
+                setTimeout(loadBuyerOrders, 400);
 
-            return String(value)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-
+            } catch (e) {
+                showToast(e.message || "Unable to cancel order.", "error");
+            }
         }
 
+        document.addEventListener("DOMContentLoaded", () => {
+            initNavUser();
+            loadBuyerOrders();
+        });
     </script>
-
-
 </body>
-
 </html>

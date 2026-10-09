@@ -23,6 +23,7 @@ public class Order {
     private String paymentMethod;
     private double total;
     private String orderDate;
+    private String status = "PLACED";
 
     @Transient
     private List<OrderItem> items = new ArrayList<>();
@@ -108,6 +109,14 @@ public class Order {
 
     public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;
+    }
+
+    public String getStatus() {
+        return status != null ? status : "PLACED";
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public List<OrderItem> getItems() {

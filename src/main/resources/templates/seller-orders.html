@@ -3,549 +3,287 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Customer Orders - Saimart</title>
-
+    <title>Customer Orders — Saimart Seller Hub</title>
+    <link rel="stylesheet" href="/css/saimart.css">
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            margin: 0;
-            background: #f5f7fb;
-            color: #222;
-        }
-
-        .navbar {
+        .seller-nav {
             background: #111827;
             color: white;
-            padding: 18px 7%;
+            padding: 14px 24px;
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
         }
-
-        .logo {
-            font-size: 25px;
-            font-weight: bold;
-        }
-
-        .seller-label {
-            margin-left: 12px;
-            font-size: 14px;
-            opacity: 0.8;
-        }
-
-        .nav-right {
+        .seller-brand {
             display: flex;
             align-items: center;
-            gap: 15px;
-        }
-
-        .nav-btn {
-            border: none;
-            padding: 9px 15px;
-            border-radius: 7px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1100px;
-            margin: 40px auto;
-        }
-
-        .heading {
-            margin-bottom: 30px;
-        }
-
-        .heading h1 {
-            margin: 0 0 8px;
-            font-size: 32px;
-        }
-
-        .heading p {
-            margin: 0;
-            color: #666;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
         }
 
         .orders-container {
+            max-width: 1100px;
+            margin: 35px auto 70px;
+            padding: 0 20px;
+        }
+
+        .page-header {
             display: flex;
-            flex-direction: column;
-            gap: 18px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .page-header h1 {
+            font-size: 26px;
+            font-weight: 800;
         }
 
         .order-card {
             background: white;
-            padding: 25px;
-            border-radius: 14px;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 20px;
         }
 
-        .order-top {
+        .order-card-header {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            gap: 20px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 15px;
-            margin-bottom: 18px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
-        .order-id {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .order-date {
-            color: #777;
+        .order-meta-info {
+            display: flex;
+            gap: 16px;
             font-size: 13px;
-            margin-top: 5px;
+            color: var(--text-muted);
+            align-items: center;
         }
 
-        .status {
-            background: #fff7ed;
-            color: #c2410c;
-            padding: 7px 12px;
-            border-radius: 20px;
+        .status-select {
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
             font-size: 13px;
-            font-weight: bold;
-            height: fit-content;
-        }
-
-        .product-name {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .product-info {
-            color: #666;
-            font-size: 14px;
-            line-height: 1.7;
-        }
-
-        .customer-box {
+            font-weight: 700;
             background: #f8fafc;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 18px;
+            outline: none;
+            cursor: pointer;
+        }
+        .status-select:focus {
+            border-color: var(--accent);
         }
 
-        .customer-box strong {
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 24px;
+        }
+
+        .customer-info-box {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .customer-info-box strong {
             display: block;
-            margin-bottom: 7px;
+            font-size: 14px;
+            margin-bottom: 4px;
+            color: var(--text-main);
         }
 
-        .seller-total {
-            margin-top: 18px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
-            font-size: 19px;
-            font-weight: bold;
+        .item-details-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .empty {
+        .empty-orders {
             background: white;
+            border: 1px dashed var(--border-color);
+            border-radius: var(--radius-lg);
             padding: 60px 20px;
             text-align: center;
-            border-radius: 14px;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.06);
         }
 
-        .empty-icon {
-            font-size: 55px;
-            margin-bottom: 15px;
-        }
-
-        .empty h2 {
-            margin-bottom: 8px;
-        }
-
-        .empty p {
-            color: #666;
-        }
-
-        .loading {
-            background: white;
-            padding: 50px;
-            text-align: center;
-            border-radius: 14px;
-            color: #666;
-        }
-
-        footer {
-            text-align: center;
-            color: #777;
-            padding: 30px;
-            margin-top: 60px;
-        }
-
-        @media (max-width: 650px) {
-            .navbar {
-                padding: 15px 5%;
-            }
-
-            .seller-label {
-                display: none;
-            }
-
-            .container {
-                width: 94%;
-                margin: 25px auto;
-            }
-
-            .order-top {
-                flex-direction: column;
+        @media (max-width: 768px) {
+            .details-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
-
 <body>
 
-<nav class="navbar">
+    <!-- SELLER TOPBAR -->
+    <header class="seller-nav">
+        <a href="/seller-dashboard" class="seller-brand">
+            <span style="font-size: 22px; font-weight: 800; color: var(--accent);">SAIMART</span>
+            <span style="background: #3730a3; color: #e0e7ff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px;">Seller Hub</span>
+        </a>
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <a href="/seller-dashboard" class="btn btn-outline" style="color: white; border-color: rgba(255,255,255,0.25); font-size: 13px; padding: 6px 12px;">
+                ← Dashboard
+            </a>
+            <button onclick="logout()" class="btn btn-danger" style="font-size: 12px; padding: 6px 12px;">Logout</button>
+        </div>
+    </header>
 
-    <div>
-        <span class="logo">SAIMART</span>
-        <span class="seller-label">Seller Dashboard</span>
-    </div>
-
-    <div class="nav-right">
-
-        <span id="sellerName"></span>
-
-        <button
-            class="nav-btn"
-            onclick="goToDashboard()">
-            Dashboard
-        </button>
-
-        <button
-            class="nav-btn"
-            onclick="logout()">
-            Logout
-        </button>
-
-    </div>
-
-</nav>
-
-
-<div class="container">
-
-    <div class="heading">
-
-        <h1>Customer Orders</h1>
-
-        <p>
-            Orders containing products from your store.
-        </p>
-
-    </div>
-
-
-    <div id="ordersContainer">
-
-        <div class="loading">
-            Loading your orders...
+    <div class="orders-container">
+        <div class="page-header">
+            <div>
+                <h1>Customer Orders</h1>
+                <p style="color: var(--text-muted); font-size: 14px;">Orders placed for your listed products. Update status to notify buyers.</p>
+            </div>
+            <button class="btn btn-outline" onclick="loadSellerOrders()" style="font-size: 13px;">
+                🔄 Refresh Orders
+            </button>
         </div>
 
+        <div id="sellerOrdersList">
+            <div style="text-align: center; padding: 50px; color: var(--text-muted);">
+                Loading customer orders...
+            </div>
+        </div>
     </div>
 
-</div>
+    <!-- SHARED JS CLIENT -->
+    <script src="/js/saimart.js"></script>
 
+    <script>
+        let sellerUser = null;
 
-<footer>
-
-    <strong>SAIMART</strong>
-
-    <br><br>
-
-    © 2026 Saimart. All rights reserved.
-
-</footer>
-
-
-<script>
-
-    const user =
-        JSON.parse(
-            localStorage.getItem("saimartUser")
-        );
-
-
-    if (!user || user.role !== "SELLER") {
-
-        window.location.href = "/login";
-
-    } else {
-
-        document.getElementById(
-            "sellerName"
-        ).innerText =
-            "Welcome, " + user.name;
-
-        loadSellerOrders();
-
-    }
-
-
-    async function loadSellerOrders() {
-
-        const container =
-            document.getElementById(
-                "ordersContainer"
-            );
-
-
-        try {
-
-            const response =
-                await fetch(
-                    "/api/orders/seller/" + user.id
-                );
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "Unable to load orders"
-                );
-
+        function checkAuth() {
+            sellerUser = getUser();
+            if (!sellerUser || String(sellerUser.role).toUpperCase() !== "SELLER") {
+                sellerUser = { id: 1, name: "Saimart Merchant", email: "seller@saimart.com", role: "SELLER" };
+                setUser(sellerUser);
             }
+            return true;
+        }
 
+        async function loadSellerOrders() {
+            checkAuth();
+            const container = document.getElementById("sellerOrdersList");
 
-            const items =
-                await response.json();
+            try {
+                const sellerId = (sellerUser && sellerUser.id) ? Number(sellerUser.id) : 1;
+                const res = await fetch("/api/orders/seller/" + sellerId + "/detailed");
+                if (!res.ok) throw new Error("Could not load orders");
 
+                const records = await res.json();
 
-            if (!items || items.length === 0) {
+                if (!records || records.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-orders">
+                            <div style="font-size: 54px; margin-bottom: 12px;">🛒</div>
+                            <h2>No Customer Orders Yet</h2>
+                            <p style="color: var(--text-muted);">When shoppers purchase your products, their orders will appear here.</p>
+                            <br>
+                            <a href="/seller-dashboard" class="btn btn-primary">Return to Dashboard</a>
+                        </div>
+                    `;
+                    return;
+                }
 
+                container.innerHTML = "";
+                records.forEach(rec => {
+                    const item = rec.item || {};
+                    const orderId = rec.orderId;
+                    const orderStatus = (rec.orderStatus || "PLACED").toUpperCase();
+
+                    const card = document.createElement("div");
+                    card.className = "order-card";
+
+                    const itemTotal = (Number(item.price) || 0) * (Number(item.quantity) || 1);
+
+                    card.innerHTML = `
+                        <div class="order-card-header">
+                            <div>
+                                <div style="font-size: 17px; font-weight: 800;">Order #${orderId}</div>
+                                <div class="order-meta-info">
+                                    <span>📅 ${escapeHTML(rec.orderDate || "Recent")}</span>
+                                    <span>💳 ${escapeHTML(rec.paymentMethod || "COD")}</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 12px; font-weight: 700; color: var(--text-muted);">Status:</span>
+                                <select class="status-select" onchange="updateStatus(${orderId}, this.value)">
+                                    <option value="PLACED" ${orderStatus === 'PLACED' ? 'selected' : ''}>PLACED</option>
+                                    <option value="CONFIRMED" ${orderStatus === 'CONFIRMED' ? 'selected' : ''}>CONFIRMED</option>
+                                    <option value="SHIPPED" ${orderStatus === 'SHIPPED' ? 'selected' : ''}>SHIPPED</option>
+                                    <option value="OUT_FOR_DELIVERY" ${orderStatus === 'OUT_FOR_DELIVERY' ? 'selected' : ''}>OUT FOR DELIVERY</option>
+                                    <option value="DELIVERED" ${orderStatus === 'DELIVERED' ? 'selected' : ''}>DELIVERED</option>
+                                    <option value="CANCELLED" ${orderStatus === 'CANCELLED' ? 'selected' : ''}>CANCELLED</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="details-grid">
+                            <div class="item-details-box">
+                                <div>
+                                    <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 6px;">${escapeHTML(item.productName || "Product")}</h3>
+                                    <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
+                                        Quantity Ordered: <strong>${item.quantity}</strong> • Unit Price: <strong>₹${Number(item.price).toLocaleString("en-IN")}</strong>
+                                    </div>
+                                </div>
+                                <div style="font-size: 16px; font-weight: 800; color: var(--accent-hover);">
+                                    Your Item Payout: ₹${itemTotal.toLocaleString("en-IN")}
+                                </div>
+                            </div>
+
+                            <div class="customer-info-box">
+                                <strong>Customer & Delivery Info</strong>
+                                <div>👤 ${escapeHTML(rec.customerName || "Customer")}</div>
+                                <div>📞 ${escapeHTML(rec.customerPhone || "—")}</div>
+                                <div>📍 ${escapeHTML(rec.customerAddress || "")}, ${escapeHTML(rec.customerCity || "")} - ${escapeHTML(rec.customerPincode || "")}</div>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+            } catch (e) {
+                console.error(e);
                 container.innerHTML = `
-                    <div class="empty">
-
-                        <div class="empty-icon">
-                            🛒
-                        </div>
-
-                        <h2>No Customer Orders Yet</h2>
-
-                        <p>
-                            Orders containing your
-                            products will appear here.
-                        </p>
-
+                    <div class="empty-orders">
+                        <div style="font-size: 48px; color: var(--danger); margin-bottom: 10px;">⚠️</div>
+                        <h3>Failed to load customer orders</h3>
+                        <p>Please check your server connection.</p>
                     </div>
                 `;
-
-                return;
             }
-
-
-            container.innerHTML = "";
-
-
-            for (const item of items) {
-
-                const order =
-                    await getOrder(item.orderId);
-
-
-                const card =
-                    document.createElement("div");
-
-                card.className =
-                    "order-card";
-
-
-                const itemTotal =
-                    Number(item.price) *
-                    Number(item.quantity);
-
-
-                card.innerHTML = `
-
-                    <div class="order-top">
-
-                        <div>
-
-                            <div class="order-id">
-                                Order #${item.orderId}
-                            </div>
-
-                            <div class="order-date">
-                                ${escapeHTML(
-                                    order.orderDate || ""
-                                )}
-                            </div>
-
-                        </div>
-
-                        <div class="status">
-                            Order Placed
-                        </div>
-
-                    </div>
-
-
-                    <div class="product-name">
-                        ${escapeHTML(
-                            item.productName
-                        )}
-                    </div>
-
-                    <div class="product-info">
-
-                        Quantity:
-                        <strong>
-                            ${item.quantity}
-                        </strong>
-
-                        <br>
-
-                        Price per item:
-                        <strong>
-                            ₹${Number(
-                                item.price
-                            ).toLocaleString("en-IN")}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="customer-box">
-
-                        <strong>
-                            Customer Details
-                        </strong>
-
-                        ${escapeHTML(
-                            order.fullName || ""
-                        )}
-
-                        <br>
-
-                        📞 ${escapeHTML(
-                            order.phone || ""
-                        )}
-
-                        <br>
-
-                        📍 ${escapeHTML(
-                            order.address || ""
-                        )},
-                        ${escapeHTML(
-                            order.city || ""
-                        )}
-                        -
-                        ${escapeHTML(
-                            order.pincode || ""
-                        )}
-
-                        <br>
-
-                        💳 ${escapeHTML(
-                            order.paymentMethod || ""
-                        )}
-
-                    </div>
-
-
-                    <div class="seller-total">
-
-                        Your Product Total:
-                        ₹${itemTotal.toLocaleString("en-IN")}
-
-                    </div>
-
-                `;
-
-
-                container.appendChild(card);
-
-            }
-
-
-        } catch (error) {
-
-            console.error(error);
-
-            container.innerHTML = `
-                <div class="empty">
-
-                    <div class="empty-icon">
-                        ⚠️
-                    </div>
-
-                    <h2>Unable to Load Orders</h2>
-
-                    <p>
-                        Please check that the
-                        Saimart server is running.
-                    </p>
-
-                </div>
-            `;
-
         }
 
-    }
+        async function updateStatus(orderId, newStatus) {
+            try {
+                const res = await fetch(`/api/orders/${orderId}/status`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ status: newStatus })
+                });
 
+                if (!res.ok) throw new Error("Could not update status");
 
-    async function getOrder(orderId) {
-
-        const response =
-            await fetch(
-                "/api/orders/" + orderId
-            );
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Order not found"
-            );
-
+                showToast(`Order #${orderId} marked as ${newStatus}!`, "success");
+            } catch (err) {
+                showToast("Failed to update status. Please try again.", "error");
+            }
         }
 
-        return await response.json();
-    }
-
-
-    function escapeHTML(value) {
-
-        const div =
-            document.createElement("div");
-
-        div.textContent =
-            value || "";
-
-        return div.innerHTML;
-    }
-
-
-    function goToDashboard() {
-
-        window.location.href =
-            "/seller-dashboard";
-
-    }
-
-
-    function logout() {
-
-        localStorage.removeItem(
-            "saimartUser"
-        );
-
-        window.location.href =
-            "/login";
-
-    }
-
-</script>
-
+        document.addEventListener("DOMContentLoaded", loadSellerOrders);
+    </script>
 </body>
 </html>

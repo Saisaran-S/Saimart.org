@@ -1,586 +1,402 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Order Confirmed - Saimart</title>
-
+    <title>Order Confirmed — Saimart</title>
+    <link rel="stylesheet" href="/css/saimart.css">
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
+        .success-wrapper {
+            max-width: 860px;
+            margin: 40px auto 70px;
+            padding: 0 20px;
         }
 
-        body {
-            margin: 0;
-            background: #f3f4f6;
-            color: #222;
-        }
-
-        /* NAVBAR */
-
-        .navbar {
-            background: #131921;
-            color: white;
-            padding: 16px 6%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 25px;
-            font-weight: bold;
-            color: #ff9900;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            margin-left: 22px;
-            font-size: 15px;
-        }
-
-        .nav-links a:hover {
-            color: #ff9900;
-        }
-
-        /* MAIN */
-
-        .container {
-            width: 92%;
-            max-width: 850px;
-            margin: 45px auto;
-        }
-
-        /* SUCCESS CARD */
-
-        .success-card {
+        .success-box {
             background: white;
-            border-radius: 14px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
             padding: 40px;
             text-align: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 24px;
         }
 
-        .success-icon {
-            width: 80px;
-            height: 80px;
-            margin: auto;
+        .success-check-circle {
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
-            background: #e8f7ee;
-            color: #20a05a;
+            background: #ecfdf5;
+            color: var(--success);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 42px;
+            font-size: 38px;
+            margin: 0 auto 18px;
         }
 
-        .success-card h1 {
-            margin: 20px 0 8px;
-            font-size: 30px;
-            color: #222;
+        .success-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 8px;
         }
 
-        .success-card p {
-            color: #666;
-            font-size: 16px;
-        }
-
-        .order-id {
+        .order-badge {
             display: inline-block;
-            margin-top: 12px;
-            padding: 9px 18px;
             background: #f1f5f9;
+            color: var(--text-main);
+            padding: 6px 16px;
             border-radius: 20px;
-            font-weight: bold;
-            color: #333;
+            font-weight: 700;
+            font-size: 14px;
+            margin-top: 10px;
         }
 
-        /* DETAILS */
-
-        .details-card {
+        /* Tracking Timeline */
+        .timeline-card {
             background: white;
-            margin-top: 22px;
-            border-radius: 14px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
             padding: 30px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 24px;
         }
-
-        .details-card h2 {
-            margin-top: 0;
-            margin-bottom: 22px;
+        .timeline-card h2 {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 30px;
+            text-align: center;
         }
-
-        .details-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 18px;
-        }
-
-        .detail {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-        }
-
-        .detail span {
-            display: block;
-            font-size: 13px;
-            color: #777;
-            margin-bottom: 5px;
-        }
-
-        .detail strong {
-            font-size: 15px;
-        }
-
-        .address {
-            grid-column: span 2;
-        }
-
-        .total {
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
-            display: flex;
-            justify-content: space-between;
-            font-size: 21px;
-            font-weight: bold;
-        }
-
-        .total-price {
-            color: #e47911;
-        }
-
-        /* TRACKING */
-
-        .tracking {
-            background: white;
-            margin-top: 22px;
-            border-radius: 14px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-        }
-
-        .tracking h2 {
-            margin-top: 0;
-        }
-
-        .steps {
+        .tracker-steps {
             display: flex;
             justify-content: space-between;
             position: relative;
-            margin-top: 35px;
         }
-
-        .steps::before {
-            content: "";
+        .tracker-steps::before {
+            content: '';
             position: absolute;
-            top: 18px;
-            left: 10%;
-            right: 10%;
+            top: 20px;
+            left: 8%;
+            right: 8%;
             height: 4px;
-            background: #ddd;
+            background: #e2e8f0;
             z-index: 0;
         }
-
-        .step {
-            position: relative;
+        .tracker-progress-fill {
+            position: absolute;
+            top: 20px;
+            left: 8%;
+            height: 4px;
+            background: var(--success);
             z-index: 1;
-            text-align: center;
-            width: 20%;
+            transition: width 0.4s ease;
         }
-
-        .circle {
-            width: 38px;
-            height: 38px;
-            margin: auto;
+        .t-step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 18%;
+        }
+        .t-circle {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: #ddd;
+            background: #e2e8f0;
+            color: #64748b;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 17px;
+            font-size: 15px;
+            font-weight: 800;
+            margin: 0 auto 8px;
+            transition: var(--transition);
         }
-
-        .step.active .circle {
-            background: #20a05a;
+        .t-step.active .t-circle {
+            background: var(--success);
+            color: white;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+        }
+        .t-step.completed .t-circle {
+            background: var(--success);
             color: white;
         }
-
-        .step p {
+        .t-label {
             font-size: 12px;
-            margin-top: 10px;
-            color: #555;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        .t-step.active .t-label, .t-step.completed .t-label {
+            color: var(--text-main);
+            font-weight: 700;
         }
 
-        .step.active p {
-            font-weight: bold;
-            color: #20a05a;
+        /* Order Details Card */
+        .order-info-card {
+            background: white;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            padding: 28px;
+            box-shadow: var(--shadow-sm);
+        }
+        .order-info-card h3 {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        .info-cell span {
+            display: block;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .info-cell strong {
+            font-size: 14px;
         }
 
-        /* BUTTONS */
-
-        .buttons {
-            text-align: center;
-            margin-top: 28px;
+        .receipt-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+        .receipt-table th, .receipt-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+        .receipt-table th {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 12px;
         }
 
-        .btn {
-            display: inline-block;
-            padding: 13px 24px;
-            margin: 5px;
-            border-radius: 7px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-
-        .primary {
-            background: #ff9900;
-            color: #111;
-        }
-
-        .primary:hover {
-            background: #e68a00;
-        }
-
-        .secondary {
-            background: #131921;
-            color: white;
-        }
-
-        .secondary:hover {
-            background: #232f3e;
-        }
-
-        /* MOBILE */
-
-        @media (max-width: 650px) {
-
-            .navbar {
+        @media (max-width: 600px) {
+            .tracker-steps {
                 flex-direction: column;
-                gap: 12px;
+                gap: 16px;
             }
-
-            .nav-links a {
-                margin: 0 7px;
-                font-size: 13px;
+            .tracker-steps::before, .tracker-progress-fill {
+                display: none;
             }
-
-            .container {
-                margin-top: 25px;
+            .t-step {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                text-align: left;
             }
-
-            .success-card {
-                padding: 28px 18px;
+            .t-circle {
+                margin: 0;
             }
-
-            .success-card h1 {
-                font-size: 24px;
-            }
-
-            .details-card,
-            .tracking {
-                padding: 20px;
-            }
-
-            .details-grid {
+            .info-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .address {
-                grid-column: span 1;
-            }
-
-            .steps p {
-                font-size: 10px;
             }
         }
     </style>
-
 </head>
-
 <body>
 
     <!-- NAVBAR -->
-
-    <nav class="navbar">
-
-        <div class="logo">
-            Saimart
-        </div>
-
-        <div class="nav-links">
-            <a href="/">Home</a>
-            <a href="/products">Products</a>
-            <a href="/cart">Cart</a>
-            <a href="/orders">My Orders</a>
-        </div>
-
-    </nav>
-
-
-    <!-- MAIN -->
-
-    <div class="container">
-
-
-        <!-- SUCCESS -->
-
-        <div class="success-card">
-
-            <div class="success-icon">
-                ✓
+    <header class="saimart-nav">
+        <div class="saimart-nav-inner">
+            <a href="/" class="nav-brand">
+                <span class="nav-brand-logo">SAIMART</span>
+                <span class="nav-brand-badge">Order Confirmed</span>
+            </a>
+            <div class="nav-actions" style="margin-left: auto;">
+                <a href="/orders" class="nav-link">📦 My Orders</a>
+                <a href="/products" class="nav-link">Shop More</a>
             </div>
+        </div>
+    </header>
 
-            <h1>Order Placed Successfully!</h1>
-
-            <p>
-                Thank you for shopping with Saimart.
-                Your order has been confirmed.
+    <div class="success-wrapper">
+        <div class="success-box">
+            <div class="success-check-circle">✓</div>
+            <h1 class="success-title">Order Placed Successfully!</h1>
+            <p style="color: var(--text-muted); font-size: 15px;">
+                Thank you for your purchase. We have received your order and notified the merchant.
             </p>
+            <div class="order-badge" id="orderIdBadge">Loading order #...</div>
+        </div>
 
-            <div class="order-id" id="orderId">
-                Order ID: Loading...
+        <!-- TRACKER -->
+        <div class="timeline-card">
+            <h2>🚚 Real-Time Order Tracking</h2>
+            <div class="tracker-steps" id="trackerSteps">
+                <div class="tracker-progress-fill" id="progressFill" style="width: 0%;"></div>
+
+                <div class="t-step" id="step-PLACED">
+                    <div class="t-circle">1</div>
+                    <div class="t-label">Order Placed</div>
+                </div>
+                <div class="t-step" id="step-CONFIRMED">
+                    <div class="t-circle">2</div>
+                    <div class="t-label">Confirmed</div>
+                </div>
+                <div class="t-step" id="step-SHIPPED">
+                    <div class="t-circle">3</div>
+                    <div class="t-label">Shipped</div>
+                </div>
+                <div class="t-step" id="step-OUT_FOR_DELIVERY">
+                    <div class="t-circle">4</div>
+                    <div class="t-label">Out for Delivery</div>
+                </div>
+                <div class="t-step" id="step-DELIVERED">
+                    <div class="t-circle">5</div>
+                    <div class="t-label">Delivered</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ORDER RECEIPT DETAILS -->
+        <div class="order-info-card">
+            <h3>Receipt & Shipping Summary</h3>
+            <div class="info-grid">
+                <div class="info-cell">
+                    <span>Recipient</span>
+                    <strong id="receiptName">—</strong>
+                </div>
+                <div class="info-cell">
+                    <span>Phone Contact</span>
+                    <strong id="receiptPhone">—</strong>
+                </div>
+                <div class="info-cell" style="grid-column: span 2;">
+                    <span>Delivery Address</span>
+                    <strong id="receiptAddress">—</strong>
+                </div>
+                <div class="info-cell">
+                    <span>Payment Method</span>
+                    <strong id="receiptPayment">—</strong>
+                </div>
+                <div class="info-cell">
+                    <span>Order Date</span>
+                    <strong id="receiptDate">—</strong>
+                </div>
             </div>
 
-        </div>
+            <table class="receipt-table">
+                <thead>
+                    <tr>
+                        <th>Item Description</th>
+                        <th>Qty</th>
+                        <th>Unit Price</th>
+                        <th style="text-align: right;">Total</th>
+                    </tr>
+                </thead>
+                <tbody id="receiptItems"></tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" style="text-align: right; font-weight: 700; padding-top: 14px;">Total Paid:</td>
+                        <td style="text-align: right; font-weight: 800; font-size: 17px; color: var(--accent-hover); padding-top: 14px;" id="receiptTotal">₹0</td>
+                    </tr>
+                </tfoot>
+            </table>
 
-
-        <!-- ORDER DETAILS -->
-
-        <div class="details-card">
-
-            <h2>📦 Order Details</h2>
-
-            <div id="orderDetails">
-
-                <p>Loading order information...</p>
-
+            <div style="display: flex; gap: 12px; margin-top: 28px; justify-content: center; flex-wrap: wrap;">
+                <a href="/orders" class="btn btn-primary" style="padding: 12px 24px;">
+                    📦 View All My Orders
+                </a>
+                <a href="/products" class="btn btn-dark" style="padding: 12px 24px;">
+                    🛍️ Continue Shopping
+                </a>
+                <button type="button" class="btn btn-outline" onclick="window.print()" style="padding: 12px 20px;">
+                    🖨️ Print Receipt
+                </button>
             </div>
-
         </div>
-
-
-        <!-- TRACKING -->
-
-        <div class="tracking">
-
-            <h2>🚚 Order Tracking</h2>
-
-            <div class="steps">
-
-                <div class="step active">
-
-                    <div class="circle">
-                        ✓
-                    </div>
-
-                    <p>Order Placed</p>
-
-                </div>
-
-
-                <div class="step">
-
-                    <div class="circle">
-                        2
-                    </div>
-
-                    <p>Confirmed</p>
-
-                </div>
-
-
-                <div class="step">
-
-                    <div class="circle">
-                        3
-                    </div>
-
-                    <p>Shipped</p>
-
-                </div>
-
-
-                <div class="step">
-
-                    <div class="circle">
-                        4
-                    </div>
-
-                    <p>Out for Delivery</p>
-
-                </div>
-
-
-                <div class="step">
-
-                    <div class="circle">
-                        5
-                    </div>
-
-                    <p>Delivered</p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- BUTTONS -->
-
-        <div class="buttons">
-
-            <a href="/products" class="btn primary">
-                🛍️ Continue Shopping
-            </a>
-
-            <a href="/orders" class="btn secondary">
-                📦 View My Orders
-            </a>
-
-        </div>
-
-
     </div>
 
+    <!-- SHARED JS CLIENT -->
+    <script src="/js/saimart.js"></script>
 
     <script>
+        const lastOrderId = localStorage.getItem("saimartLastOrderId");
 
-        const orderId =
-            localStorage.getItem("saimartLastOrderId");
+        async function loadOrderReceipt() {
+            if (!lastOrderId) {
+                document.getElementById("orderIdBadge").innerText = "Order information not found";
+                return;
+            }
 
+            document.getElementById("orderIdBadge").innerText = `Order ID: #${lastOrderId}`;
 
-        if (!orderId) {
+            try {
+                const res = await fetch("/api/orders/" + lastOrderId);
+                if (!res.ok) throw new Error("Could not fetch order");
 
-            document.getElementById("orderId").innerText =
-                "Order information not found";
+                const order = await res.json();
 
-            document.getElementById("orderDetails").innerHTML =
-                "<p>Unable to find your order.</p>";
+                document.getElementById("receiptName").innerText = order.fullName || "—";
+                document.getElementById("receiptPhone").innerText = order.phone || "—";
+                document.getElementById("receiptAddress").innerText = `${order.address}, ${order.city} - ${order.pincode}`;
+                document.getElementById("receiptPayment").innerText = order.paymentMethod || "COD";
+                document.getElementById("receiptDate").innerText = order.orderDate || "Today";
+                document.getElementById("receiptTotal").innerText = "₹" + Number(order.total).toLocaleString("en-IN");
 
-        } else {
+                // Update timeline status
+                updateTrackingTimeline(order.status || "PLACED");
 
-            document.getElementById("orderId").innerText =
-                "Order ID: #" + orderId;
+                // Render items
+                const tbody = document.getElementById("receiptItems");
+                tbody.innerHTML = "";
 
+                if (order.items && order.items.length > 0) {
+                    order.items.forEach(item => {
+                        const tr = document.createElement("tr");
+                        tr.innerHTML = `
+                            <td><strong>${escapeHTML(item.productName)}</strong></td>
+                            <td>${item.quantity}</td>
+                            <td>₹${Number(item.price).toLocaleString("en-IN")}</td>
+                            <td style="text-align: right; font-weight: 700;">₹${(Number(item.price) * Number(item.quantity)).toLocaleString("en-IN")}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
 
-            fetch("/api/orders/" + orderId)
-
-                .then(response => {
-
-                    if (!response.ok) {
-                        throw new Error("Order not found");
-                    }
-
-                    return response.json();
-
-                })
-
-                .then(order => {
-
-                    document.getElementById("orderDetails").innerHTML = `
-
-                        <div class="details-grid">
-
-                            <div class="detail">
-
-                                <span>Customer Name</span>
-
-                                <strong>
-                                    ${order.fullName}
-                                </strong>
-
-                            </div>
-
-
-                            <div class="detail">
-
-                                <span>Phone Number</span>
-
-                                <strong>
-                                    ${order.phone}
-                                </strong>
-
-                            </div>
-
-
-                            <div class="detail address">
-
-                                <span>Delivery Address</span>
-
-                                <strong>
-                                    ${order.address},
-                                    ${order.city} -
-                                    ${order.pincode}
-                                </strong>
-
-                            </div>
-
-
-                            <div class="detail">
-
-                                <span>Payment Method</span>
-
-                                <strong>
-                                    ${order.paymentMethod}
-                                </strong>
-
-                            </div>
-
-
-                            <div class="detail">
-
-                                <span>Order Date</span>
-
-                                <strong>
-                                    ${order.orderDate}
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="total">
-
-                            <span>Total Amount</span>
-
-                            <span class="total-price">
-                                ₹${order.total}
-                            </span>
-
-                        </div>
-
-                    `;
-
-                })
-
-                .catch(error => {
-
-                    console.error(error);
-
-                    document.getElementById("orderDetails").innerHTML = `
-
-                        <p>
-                            Unable to load order details.
-                            Please check My Orders.
-                        </p>
-
-                    `;
-
-                });
-
+            } catch (err) {
+                console.error(err);
+            }
         }
 
+        function updateTrackingTimeline(status) {
+            const steps = ["PLACED", "CONFIRMED", "SHIPPED", "OUT_FOR_DELIVERY", "DELIVERED"];
+            const currentIdx = steps.indexOf(status.toUpperCase());
+            const activeIndex = currentIdx >= 0 ? currentIdx : 0;
+
+            const progressPercent = (activeIndex / (steps.length - 1)) * 84;
+            const fill = document.getElementById("progressFill");
+            if (fill) fill.style.width = `${progressPercent}%`;
+
+            steps.forEach((s, idx) => {
+                const el = document.getElementById("step-" + s);
+                if (!el) return;
+
+                if (idx < activeIndex) {
+                    el.className = "t-step completed";
+                    el.querySelector(".t-circle").innerHTML = "✓";
+                } else if (idx === activeIndex) {
+                    el.className = "t-step active";
+                    el.querySelector(".t-circle").innerHTML = "●";
+                } else {
+                    el.className = "t-step";
+                    el.querySelector(".t-circle").innerHTML = idx + 1;
+                }
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", loadOrderReceipt);
     </script>
-
 </body>
-
 </html>
