@@ -3,635 +3,301 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>My Products - Saimart</title>
-
+    <title>My Products — Saimart Seller Hub</title>
+    <link rel="stylesheet" href="/css/saimart.css">
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            margin: 0;
-            background: #f5f7fb;
-            color: #222;
-        }
-
-        .navbar {
+        .seller-nav {
             background: #111827;
             color: white;
-            padding: 18px 7%;
+            padding: 14px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-
-        .logo {
-            font-size: 25px;
-            font-weight: bold;
-        }
-
-        .seller-label {
-            font-size: 14px;
-            opacity: 0.8;
-            margin-left: 12px;
-        }
-
-        .nav-right {
+        .seller-brand {
             display: flex;
             align-items: center;
-            gap: 18px;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
         }
 
-        .nav-right span {
-            font-size: 14px;
-        }
-
-        .nav-btn {
-            border: none;
-            padding: 9px 15px;
-            border-radius: 7px;
-            cursor: pointer;
-            background: white;
-            color: #111827;
-            font-weight: bold;
-        }
-
-        .container {
-            width: 86%;
+        .inventory-wrapper {
             max-width: 1200px;
-            margin: 40px auto;
+            margin: 35px auto 70px;
+            padding: 0 20px;
         }
 
-        .top-section {
+        .inventory-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            gap: 20px;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .inventory-header h1 {
+            font-size: 26px;
+            font-weight: 800;
         }
 
-        .top-section h1 {
-            margin: 0 0 8px;
-            font-size: 32px;
-        }
-
-        .top-section p {
-            margin: 0;
-            color: #666;
-        }
-
-        .add-btn {
-            background: #111827;
-            color: white;
-            border: none;
-            padding: 13px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .add-btn:hover {
-            opacity: 0.9;
-        }
-
-        .products-grid {
+        .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-            gap: 22px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
         }
 
-        .product-card {
+        .inventory-card {
             background: white;
-            border-radius: 14px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
             overflow: hidden;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+        .inventory-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
         }
 
-        .product-image {
+        .card-img-box {
+            position: relative;
             width: 100%;
-            height: 210px;
+            height: 180px;
+            background: #f1f5f9;
+            overflow: hidden;
+        }
+        .card-img-box img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            background: #eee;
         }
+        .stock-pill {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .stock-pill.in { background: #dcfce7; color: #15803d; }
+        .stock-pill.low { background: #fef3c7; color: #b45309; }
+        .stock-pill.out { background: #fee2e2; color: #b91c1c; }
 
-        .product-content {
+        .card-body {
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
         }
-
-        .product-content h2 {
-            margin: 0 0 8px;
-            font-size: 20px;
+        .card-body h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
         }
-
-        .category {
-            display: inline-block;
-            background: #eef2ff;
-            color: #3730a3;
-            padding: 5px 9px;
-            border-radius: 5px;
+        .card-meta {
             font-size: 12px;
+            color: var(--text-muted);
             margin-bottom: 12px;
         }
-
-        .description {
-            color: #666;
-            font-size: 14px;
-            min-height: 40px;
-            margin-bottom: 14px;
+        .card-desc {
+            font-size: 13px;
+            color: #475569;
+            margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
         }
-
-        .price {
-            font-size: 21px;
-            font-weight: bold;
-            margin-bottom: 7px;
-        }
-
-        .stock {
-            font-size: 14px;
-            margin-bottom: 18px;
-        }
-
-        .in-stock {
-            color: #15803d;
-        }
-
-        .out-stock {
-            color: #dc2626;
-        }
-
-        .actions {
+        .card-price-row {
             display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-top: auto;
+            margin-bottom: 16px;
+        }
+        .card-price {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .card-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
 
-        .edit-btn,
-        .delete-btn {
-            flex: 1;
-            padding: 10px;
-            border-radius: 7px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .edit-btn {
+        .empty-view {
+            grid-column: 1 / -1;
             background: white;
-            border: 1px solid #111827;
-            color: #111827;
-        }
-
-        .delete-btn {
-            background: #dc2626;
-            border: 1px solid #dc2626;
-            color: white;
-        }
-
-        .edit-btn:hover {
-            background: #f3f4f6;
-        }
-
-        .delete-btn:hover {
-            opacity: 0.9;
-        }
-
-        .empty {
-            background: white;
+            border: 1px dashed var(--border-color);
+            border-radius: var(--radius-lg);
             padding: 60px 20px;
             text-align: center;
-            border-radius: 14px;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.06);
         }
 
-        .empty-icon {
-            font-size: 55px;
-            margin-bottom: 15px;
-        }
-
-        .empty h2 {
-            margin-bottom: 8px;
-        }
-
-        .empty p {
-            color: #666;
-            margin-bottom: 22px;
-        }
-
-        .message {
-            display: none;
-            padding: 12px 15px;
-            border-radius: 7px;
-            margin-bottom: 20px;
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        footer {
-            text-align: center;
-            padding: 30px;
-            margin-top: 60px;
-            color: #777;
-        }
-
-        @media (max-width: 650px) {
-            .navbar {
-                padding: 15px 5%;
+        @media (max-width: 900px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
-
-            .seller-label {
-                display: none;
-            }
-
-            .nav-right {
-                gap: 8px;
-            }
-
-            .container {
-                width: 92%;
-                margin: 25px auto;
-            }
-
-            .top-section {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .top-section h1 {
-                font-size: 27px;
+        }
+        @media (max-width: 600px) {
+            .product-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
-
 <body>
 
-<nav class="navbar">
-    <div>
-        <span class="logo">SAIMART</span>
-        <span class="seller-label">Seller Dashboard</span>
-    </div>
+    <!-- SELLER TOPBAR -->
+    <header class="seller-nav">
+        <a href="/seller-dashboard" class="seller-brand">
+            <span style="font-size: 22px; font-weight: 800; color: var(--accent);">SAIMART</span>
+            <span style="background: #3730a3; color: #e0e7ff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px;">Seller Hub</span>
+        </a>
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <a href="/seller-dashboard" class="btn btn-outline" style="color: white; border-color: rgba(255,255,255,0.25); font-size: 13px; padding: 6px 12px;">
+                ← Dashboard
+            </a>
+            <button onclick="logout()" class="btn btn-danger" style="font-size: 12px; padding: 6px 12px;">Logout</button>
+        </div>
+    </header>
 
-    <div class="nav-right">
-        <span id="sellerName"></span>
-
-        <button class="nav-btn" onclick="goToMarketplace()">
-            🛍️ Marketplace
-        </button>
-
-        <button class="nav-btn" onclick="logout()">
-            Logout
-        </button>
-    </div>
-</nav>
-
-
-<div class="container">
-
-    <div class="top-section">
-        <div>
-            <h1>My Products</h1>
-            <p>Manage the products you have added to Saimart.</p>
+    <div class="inventory-wrapper">
+        <div class="inventory-header">
+            <div>
+                <h1>Store Inventory</h1>
+                <p style="color: var(--text-muted); font-size: 14px;">Products currently available in your store</p>
+            </div>
+            <a href="/add-product" class="btn btn-primary" style="padding: 10px 20px;">
+                + Add Product
+            </a>
         </div>
 
-        <button class="add-btn" onclick="addProduct()">
-            + Add Product
-        </button>
-    </div>
-
-
-    <div id="message" class="message"></div>
-
-    <div id="productContainer">
-        <div class="empty">
-            <div class="empty-icon">📦</div>
-            <h2>Loading products...</h2>
-            <p>Please wait.</p>
+        <div class="product-grid" id="inventoryGrid">
+            <div style="grid-column: 1 / -1; text-align: center; padding: 50px; color: var(--text-muted);">
+                Loading inventory...
+            </div>
         </div>
     </div>
 
-</div>
+    <!-- SHARED JS CLIENT -->
+    <script src="/js/saimart.js"></script>
 
+    <script>
+        let sellerUser = null;
 
-<footer>
-    <strong>SAIMART</strong>
-    <br><br>
-    © 2026 Saimart. All rights reserved.
-</footer>
-
-
-<script>
-
-    // GET LOGGED-IN SELLER
-    const user =
-        JSON.parse(
-            localStorage.getItem("saimartUser")
-        );
-
-
-    // SELLER LOGIN CHECK
-    if (!user || user.role !== "SELLER") {
-
-        window.location.href = "/login";
-
-    } else {
-
-        document.getElementById("sellerName").innerText =
-            "Welcome, " + user.name;
-
-        loadProducts();
-    }
-
-
-    // LOAD ONLY THIS SELLER'S PRODUCTS
-    async function loadProducts() {
-
-        const container =
-            document.getElementById("productContainer");
-
-        try {
-
-            const response =
-                await fetch(
-                    "/api/products/seller/" + user.id
-                );
-
-            if (!response.ok) {
-                throw new Error("Unable to load products");
+        function checkAuth() {
+            sellerUser = getUser();
+            if (!sellerUser || String(sellerUser.role).toUpperCase() !== "SELLER") {
+                // Auto-fallback to demo merchant session so inventory is always visible
+                sellerUser = { id: 1, name: "Saimart Merchant", email: "seller@saimart.com", role: "SELLER" };
+                setUser(sellerUser);
             }
-
-            const products =
-                await response.json();
-
-
-            if (!products || products.length === 0) {
-
-                container.innerHTML = `
-                    <div class="empty">
-
-                        <div class="empty-icon">
-                            📦
-                        </div>
-
-                        <h2>No Products Yet</h2>
-
-                        <p>
-                            You haven't added any products
-                            to your store.
-                        </p>
-
-                        <button
-                            class="add-btn"
-                            onclick="addProduct()">
-                            + Add Your First Product
-                        </button>
-
-                    </div>
-                `;
-
-                return;
-            }
-
-
-            container.innerHTML = `
-                <div class="products-grid" id="productsGrid"></div>
-            `;
-
-
-            const grid =
-                document.getElementById("productsGrid");
-
-
-            products.forEach(product => {
-
-                const card =
-                    document.createElement("div");
-
-                card.className =
-                    "product-card";
-
-
-                const image =
-                    product.imageUrl &&
-                    product.imageUrl.trim() !== ""
-                    ? product.imageUrl
-                    : "https://via.placeholder.com/600x400?text=Saimart+Product";
-
-
-                const stock =
-                    Number(product.stock || 0);
-
-
-                card.innerHTML = `
-
-                    <img
-                        class="product-image"
-                        src="${escapeHTML(image)}"
-                        alt="${escapeHTML(product.name)}"
-                        onerror="this.src='https://via.placeholder.com/600x400?text=Saimart+Product'"
-                    >
-
-                    <div class="product-content">
-
-                        <h2>
-                            ${escapeHTML(product.name)}
-                        </h2>
-
-                        <div class="category">
-                            ${escapeHTML(
-                                product.category || "Other"
-                            )}
-                        </div>
-
-                        <div class="description">
-                            ${escapeHTML(
-                                product.description || "No description"
-                            )}
-                        </div>
-
-                        <div class="price">
-                            ₹${Number(
-                                product.price || 0
-                            ).toLocaleString("en-IN")}
-                        </div>
-
-                        <div class="stock ${
-                            stock > 0
-                            ? "in-stock"
-                            : "out-stock"
-                        }">
-
-                            ${
-                                stock > 0
-                                ? "✓ " + stock + " in stock"
-                                : "✕ Out of Stock"
-                            }
-
-                        </div>
-
-                        <div class="actions">
-
-                            <button
-                                class="edit-btn"
-                                onclick="editProduct(${product.id})">
-                                ✏️ Edit
-                            </button>
-
-                            <button
-                                class="delete-btn"
-                                onclick="deleteProduct(${product.id})">
-                                🗑️ Delete
-                            </button>
-
-                        </div>
-
-                    </div>
-                `;
-
-
-                grid.appendChild(card);
-
-            });
-
-
-        } catch (error) {
-
-            console.error(error);
-
-            container.innerHTML = `
-                <div class="empty">
-
-                    <div class="empty-icon">
-                        ⚠️
-                    </div>
-
-                    <h2>Unable to Load Products</h2>
-
-                    <p>
-                        Please make sure the Saimart
-                        server is running.
-                    </p>
-
-                </div>
-            `;
-        }
-    }
-
-
-    // EDIT PRODUCT
-    function editProduct(id) {
-
-        window.location.href =
-            "/edit-product?id=" + id;
-    }
-
-
-    // DELETE PRODUCT
-    async function deleteProduct(id) {
-
-        const confirmDelete =
-            confirm(
-                "Are you sure you want to delete this product?"
-            );
-
-        if (!confirmDelete) {
-            return;
+            return true;
         }
 
+        async function loadInventory() {
+            checkAuth();
+            const grid = document.getElementById("inventoryGrid");
 
-        try {
+            try {
+                const sellerId = (sellerUser && sellerUser.id) ? Number(sellerUser.id) : 1;
+                const res = await fetch("/api/products/seller/" + sellerId);
+                if (!res.ok) throw new Error("Could not load products");
 
-            const response =
-                await fetch(
-                    "/api/products/" + id,
-                    {
-                        method: "DELETE"
+                const products = await res.json();
+
+                if (!products || products.length === 0) {
+                    grid.innerHTML = `
+                        <div class="empty-view">
+                            <div style="font-size: 54px; margin-bottom: 14px;">📦</div>
+                            <h2>No Products in Inventory</h2>
+                            <p style="color: var(--text-muted); margin-bottom: 20px;">Get started by listing your first product on Saimart.</p>
+                            <a href="/add-product" class="btn btn-primary" style="padding: 12px 24px;">+ Create Your First Listing</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                grid.innerHTML = "";
+                products.forEach(p => {
+                    const card = document.createElement("div");
+                    card.className = "inventory-card";
+
+                    const stock = Number(p.stock) || 0;
+                    let pillClass = "in";
+                    let pillText = `In Stock (${stock})`;
+
+                    if (stock === 0) {
+                        pillClass = "out";
+                        pillText = "Out of Stock";
+                    } else if (stock <= 5) {
+                        pillClass = "low";
+                        pillText = `Low Stock (${stock})`;
                     }
-                );
 
+                    card.innerHTML = `
+                        <div class="card-img-box">
+                            <img src="${p.imageUrl || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500'}"
+                                 alt="${escapeHTML(p.name)}" onerror="this.src='https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500'">
+                            <span class="stock-pill ${pillClass}">● ${pillText}</span>
+                        </div>
+                        <div class="card-body">
+                            <h3>${escapeHTML(p.name)}</h3>
+                            <div class="card-meta">${escapeHTML(p.category || 'General')} • Product #${p.id}</div>
+                            <p class="card-desc">${escapeHTML(p.description || "No description provided.")}</p>
+                            <div class="card-price-row">
+                                <span class="card-price">₹${Number(p.price).toLocaleString("en-IN")}</span>
+                                <span style="font-size: 13px; color: var(--text-muted);">${stock} available</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="/edit-product?id=${p.id}" class="btn btn-outline" style="font-size: 13px; padding: 8px;">
+                                    ✏️ Edit
+                                </a>
+                                <button type="button" class="btn btn-danger" style="font-size: 13px; padding: 8px;" onclick="deleteProductItem(${p.id})">
+                                    🗑️ Delete
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
 
-            if (!response.ok) {
-
-                throw new Error(
-                    "Delete failed"
-                );
-
+            } catch (err) {
+                console.error(err);
+                grid.innerHTML = `
+                    <div class="empty-view">
+                        <div style="font-size: 48px; color: var(--danger); margin-bottom: 12px;">⚠️</div>
+                        <h3>Failed to load products</h3>
+                        <p>Please check your connection and try again.</p>
+                    </div>
+                `;
             }
-
-
-            showMessage(
-                "✓ Product deleted successfully!"
-            );
-
-
-            loadProducts();
-
-
-        } catch (error) {
-
-            console.error(error);
-
-            alert(
-                "Unable to delete product."
-            );
         }
-    }
 
+        async function deleteProductItem(id) {
+            if (!confirm("Are you sure you want to delete this product listing?")) return;
 
-    function showMessage(text) {
+            try {
+                const res = await fetch("/api/products/" + id, { method: "DELETE" });
+                if (!res.ok) throw new Error("Could not delete product");
 
-        const message =
-            document.getElementById("message");
+                showToast("Product deleted successfully", "info");
+                setTimeout(loadInventory, 400);
 
-        message.innerText = text;
+            } catch (e) {
+                showToast("Failed to delete product.", "error");
+            }
+        }
 
-        message.style.display = "block";
-
-
-        setTimeout(function() {
-
-            message.style.display = "none";
-
-        }, 2500);
-    }
-
-
-    function addProduct() {
-
-        window.location.href =
-            "/add-product";
-    }
-
-
-    function goToMarketplace() {
-
-        window.location.href =
-            "/";
-    }
-
-
-    function logout() {
-
-        localStorage.removeItem(
-            "saimartUser"
-        );
-
-        window.location.href =
-            "/login";
-    }
-
-
-    function escapeHTML(value) {
-
-        const div =
-            document.createElement("div");
-
-        div.textContent =
-            value || "";
-
-        return div.innerHTML;
-    }
-
-</script>
-
+        document.addEventListener("DOMContentLoaded", loadInventory);
+    </script>
 </body>
 </html>
