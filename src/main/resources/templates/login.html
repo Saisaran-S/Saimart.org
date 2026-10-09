@@ -3,175 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Login - Saimart</title>
-
+    <title>Sign In — Saimart</title>
+    <link rel="stylesheet" href="/css/saimart.css">
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
         body {
-            margin: 0;
-            background: #f5f5f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
-        .login-box {
-            width: 400px;
+        .auth-card {
+            width: 100%;
+            max-width: 440px;
             background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
         }
 
-        h1 {
+        .auth-logo {
             text-align: center;
-            margin-bottom: 25px;
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--accent-hover);
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
         }
 
-        label {
+        .auth-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
             display: block;
-            margin-top: 15px;
-            margin-bottom: 5px;
-            font-weight: bold;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            outline: none;
+            transition: var(--transition);
+        }
+        .form-group input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
         }
 
-        input {
-            width: 100%;
+        .demo-bar {
+            background: #f8fafc;
+            border: 1px dashed var(--border-color);
+            border-radius: var(--radius-sm);
             padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 15px;
+            margin-bottom: 20px;
+            text-align: center;
         }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 20px;
-            border: none;
-            border-radius: 5px;
-            background: #ff9900;
-            font-size: 16px;
-            font-weight: bold;
+        .demo-bar p {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .demo-btns {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        .demo-btn {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: 600;
             cursor: pointer;
+            transition: var(--transition);
+        }
+        .demo-btn:hover {
+            border-color: var(--accent);
+            background: #fef3c7;
         }
 
-        button:hover {
-            background: #e68a00;
-        }
-
-        #message {
+        .auth-footer {
             text-align: center;
-            margin-top: 15px;
-            color: red;
+            margin-top: 24px;
+            font-size: 13px;
+            color: var(--text-muted);
         }
-
-        .signup-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .signup-link a {
-            color: #007bff;
+        .auth-footer a {
+            color: var(--accent-hover);
+            font-weight: 700;
             text-decoration: none;
+        }
+        .auth-footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
-
 <body>
 
-<div class="login-box">
+    <div class="auth-card">
+        <div class="auth-logo">SAIMART</div>
+        <div class="auth-subtitle">Sign in to your buyer or merchant account</div>
 
-    <h1>Saimart Login</h1>
+        <!-- Demonstration Fast-Fill -->
+        <div class="demo-bar">
+            <p>⚡ Quick Demo Fill</p>
+            <div class="demo-btns">
+                <button type="button" class="demo-btn" onclick="fillDemo('buyer@saimart.com', 'password123')">
+                    👤 Demo Buyer
+                </button>
+                <button type="button" class="demo-btn" onclick="fillDemo('seller@saimart.com', 'password123')">
+                    🏪 Demo Seller
+                </button>
+            </div>
+        </div>
 
-    <form id="loginForm">
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="email" placeholder="name@example.com" required autocomplete="email">
+            </div>
 
-        <label>Email</label>
-        <input type="email" id="email" required>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+            </div>
 
-        <label>Password</label>
-        <input type="password" id="password" required>
+            <button type="submit" id="btnLogin" class="btn btn-primary" style="width: 100%; padding: 13px; font-size: 15px; margin-top: 8px;">
+                Sign In
+            </button>
+        </form>
 
-        <button type="submit">Login</button>
-
-    </form>
-
-    <div id="message"></div>
-
-    <div class="signup-link">
-        Don't have an account?
-        <a href="/signup">Create Account</a>
+        <div class="auth-footer">
+            Don't have an account yet? <a href="/signup">Create an Account</a>
+            <div style="margin-top: 10px;">
+                <a href="/" style="color: var(--text-muted); font-size: 12px;">← Back to Home</a>
+            </div>
+        </div>
     </div>
 
-</div>
+    <!-- SHARED JS CLIENT -->
+    <script src="/js/saimart.js"></script>
 
-<script>
-
-document.getElementById("loginForm").addEventListener("submit", async function(event) {
-
-    event.preventDefault();
-
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const message = document.getElementById("message");
-
-    try {
-
-        const response = await fetch("/api/users/login", {
-
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-                email: email,
-                password: password
-            })
-        });
-
-        if (!response.ok) {
-            message.innerText = "Login failed. Please try again.";
-            return;
+    <script>
+        function fillDemo(email, pass) {
+            document.getElementById("email").value = email;
+            document.getElementById("password").value = pass;
         }
 
-        const result = await response.json();
+        async function handleLogin(e) {
+            e.preventDefault();
 
-        if (!result || !result.role) {
-            message.innerText = "Invalid email or password.";
-            return;
-        }
+            const btn = document.getElementById("btnLogin");
+            btn.disabled = true;
+            btn.innerText = "Signing in...";
 
-        localStorage.setItem("saimartUser", JSON.stringify(result));
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
 
-        message.innerText = "Login successful!";
+            try {
+                let res = await fetch("/api/users/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password })
+                });
 
-        setTimeout(function() {
+                // Auto-register demo accounts on the fly if testing on clean database!
+                if (!res.ok && (email === "buyer@saimart.com" || email === "seller@saimart.com")) {
+                    const role = email.includes("seller") ? "SELLER" : "BUYER";
+                    await fetch("/api/users/signup", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            name: role === "SELLER" ? "Saimart Merchant" : "Saimart Buyer",
+                            email: email,
+                            password: password,
+                            role: role
+                        })
+                    });
+                    res = await fetch("/api/users/login", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ email, password })
+                    });
+                }
 
-            if (result.role === "SELLER") {
-                window.location.href = "/seller-dashboard";
-            } else {
-               window.location.href = "/";
+                if (!res.ok) {
+                    throw new Error("Invalid email or password.");
+                }
+
+                const user = await res.json();
+                if (!user || !user.role) {
+                    throw new Error("Invalid credentials.");
+                }
+
+                setUser(user);
+                showToast(`Welcome back, ${user.name}! 👋`, "success");
+
+                const params = new URLSearchParams(window.location.search);
+                const redirect = params.get("redirect");
+
+                setTimeout(() => {
+                    if (redirect) {
+                        window.location.href = redirect;
+                    } else if (user.role === "SELLER") {
+                        window.location.href = "/seller-dashboard";
+                    } else {
+                        window.location.href = "/";
+                    }
+                }, 500);
+
+            } catch (err) {
+                console.error(err);
+                showToast(err.message || "Login failed. Please verify your credentials.", "error");
+                btn.disabled = false;
+                btn.innerText = "Sign In";
             }
-
-        }, 500);
-
-    } catch (error) {
-
-        console.error("Login error:", error);
-        message.innerText = "Something went wrong. Please try again.";
-
-    }
-
-});
-
-</script>
-
+        }
+    </script>
 </body>
 </html>
